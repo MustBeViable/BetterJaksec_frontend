@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./styles/App.css";
-import MainScreen from "./views/MainScreenAdmin";
+import MainScreen from "./views/MainScreen";
 import LogIn from "./views/LogIn";
 import ProfilePage from "./views/ProfilePage";
 import AttendanceView from "./views/AttendanceView";
