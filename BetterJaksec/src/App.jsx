@@ -6,7 +6,8 @@ import ProfilePage from "./views/user/ProfilePage";
 import AttendanceView from "./views/user/AttendanceView";
 import AttendanceTrackingView from "./views/user/AttendanceTrackingView";
 import MainScreenAdmin from "./views/admin/MainScreenAdmin";
-import ManageUsers from "./views/ManageUsers";
+import ManageUsers from "./views/admin/ManageUsers";
+import AdminView from "./views/admin/AdminView";
 
 function App() {
   return (
@@ -21,7 +22,9 @@ function App() {
           element={<AttendanceTrackingView />}
         />
         {/* Admin routing here */}
-        <Route path="/admin" element={<MainScreenAdmin />}>
+        <Route path="/admin" element={<AdminView />}>
+          <Route index element={<MainScreenAdmin />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route path="users" element={<ManageUsers />} />
         </Route>
       </Routes>
