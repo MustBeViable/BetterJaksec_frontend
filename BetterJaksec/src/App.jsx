@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./styles/App.css";
-import MainScreen from "./views/MainScreen";
+import MainScreen from "./views/user/MainScreen";
 import LogIn from "./views/LogIn";
-import ProfilePage from "./views/ProfilePage";
-import AttendanceView from "./views/AttendanceView";
-import AttendanceTrackingView from "./views/AttendanceTrackingView";
-import MainScreenAdmin from "./views/MainScreenAdmin";
+import ProfilePage from "./views/user/ProfilePage";
+import AttendanceView from "./views/user/AttendanceView";
+import AttendanceTrackingView from "./views/user/AttendanceTrackingView";
+import MainScreenAdmin from "./views/admin/MainScreenAdmin";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
         <Route path="/login" element={<LogIn />} />
         <Route path="/" element={<MainScreen />} />
         <Route path="/profile_page" element={<ProfilePage />} />
-        <Route path="/attemdance_view" element={<AttendanceView />} />
+        <Route path="/attendance_view" element={<AttendanceView />} />
         <Route
           path="/attendance_tracking"
           element={<AttendanceTrackingView />}
