@@ -10,6 +10,8 @@ import ManageUsers from "./views/admin/ManageUsers";
 import AdminView from "./views/admin/AdminView";
 import NewUser from "./components/admin/NewUser";
 import AdminAttendanceTrackingView from "./views/admin/AdminAttendanceTrackingView";
+import CoursesView from "./views/user/CoursesView";
+import ManageCourses from "./views/user/ManageCourses";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
           path="/attendance_tracking"
           element={<AttendanceTrackingView />}
         />
+        <Route path="/courses" element={<CoursesView />} />
+        <Route path="/courses/manage" element={<ManageCourses />} />
         {/* Admin routing here */}
         <Route path="/admin" element={<AdminView />}>
           <Route index element={<MainScreenAdmin />} />
