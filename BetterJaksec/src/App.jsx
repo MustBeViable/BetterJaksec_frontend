@@ -9,6 +9,7 @@ import MainScreenAdmin from "./views/admin/MainScreenAdmin";
 import ManageUsers from "./views/admin/ManageUsers";
 import AdminView from "./views/admin/AdminView";
 import NewUser from "./components/admin/NewUser";
+import AdminAttendanceTrackingView from "./views/admin/AdminAttendanceTrackingView";
 
 function App() {
   return (
@@ -29,6 +30,10 @@ function App() {
           <Route path="users" element={<ManageUsers />} />
           <Route path="new_user" element={<NewUser />} />
         </Route>
+        <Route
+          path="/admin_attendance_tracking"
+          element={<AdminAttendanceTrackingView />}
+        />
       </Routes>
     </BrowserRouter>
   );
