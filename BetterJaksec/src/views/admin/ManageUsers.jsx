@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UserManageButtonAdmin from "../../components/admin/UserManageButtonAdmin";
 import UserManageCard from "../../components/admin/UserManageCard";
 
@@ -24,6 +24,7 @@ const ManageUsers = () => {
     return arr;
   }, []);
 
+  const navigate = useNavigate();
   const [userList, setUserList] = useState(dummyProps);
   const [filteredUserList, setFilteredUserList] = useState(dummyProps);
   const [keyword, setKeyword] = useState("");
@@ -64,7 +65,7 @@ const ManageUsers = () => {
       {!selectedUser && (
         <>
           <h1>ManageUsers</h1>
-          <button>Add users</button>
+          <button onClick={() => {navigate("/admin/new_user")}}>Add users</button>
           <label htmlFor="usersearch">Search by name:</label>
           <input
             type="text"
