@@ -8,6 +8,7 @@ import AttendanceTrackingView from "./views/user/AttendanceTrackingView";
 import MainScreenAdmin from "./views/admin/MainScreenAdmin";
 import ManageUsers from "./views/admin/ManageUsers";
 import AdminView from "./views/admin/AdminView";
+import AdminAttendanceTrackingView from "./views/admin/AdminAttendanceTrackingView";
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="users" element={<ManageUsers />} />
         </Route>
+        <Route
+          path="/admin_attendance_tracking"
+          element={<AdminAttendanceTrackingView />}
+        />
       </Routes>
     </BrowserRouter>
   );
