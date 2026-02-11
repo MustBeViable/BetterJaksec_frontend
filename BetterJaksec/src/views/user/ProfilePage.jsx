@@ -8,7 +8,7 @@ const ProfilePage = () => {
       <div style={{ display: "flex", alignItems:"flex-start", justifyContent: "space-between" ,gap:"40px",marginLeft:"40px",marginRight:"40px"}}>
   
   {/* LEFT: profile info (vertical) */}
-  <div style={{ display: "flex", flexDirection: "column", fontSize: "1.6rem", paddingRight: "200px",paddingBottom:"200px"}}>
+  <div style={{color: "#070202", display: "flex", flexDirection: "column", fontSize: "1.6rem", paddingRight: "200px",paddingBottom:"200px"}}>
     <h2>Profile</h2>
       <div style={{ 
         background: "#f5f5f5", 
