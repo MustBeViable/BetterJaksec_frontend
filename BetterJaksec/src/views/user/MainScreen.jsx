@@ -1,9 +1,20 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const MainScreen = () => {
+  const navigate = useNavigate();
 
   return (
-    <div>MainScreen</div>
+  
+    <div>
+      <h1>MainScreen</h1>
+      <button onClick={()=> {navigate("/login")}}>log out</button>
+      <button onClick={()=> {navigate("/profile_page")}}>Profile</button>
+      <button >Courses user </button>
+      <button onClick={()=> {navigate("/courses")}}>Courses teacher</button>
+      <button onClick={()=> {navigate("/admin")}}>Admin sivut tää poistuu</button>
+      <button onClick={()=> {navigate("/admin_attendance_tracking")}}>Attendance marking</button>
+    </div>
   )
 }
 
