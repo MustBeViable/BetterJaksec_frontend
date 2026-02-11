@@ -36,7 +36,7 @@ const CoursesView = () => {
           }}
         >
           <h1>Courses</h1>
-          <button>Return</button>
+          <button onClick={()=> {navigate("/")}}>Return</button>
         </div>
 
         <h2>List of courses:</h2>
