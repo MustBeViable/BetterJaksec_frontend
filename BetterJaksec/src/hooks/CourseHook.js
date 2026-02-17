@@ -52,7 +52,6 @@ const useCourseHook = () => {
     }
     const options = {
       method: "GET",
-      body: JSON.stringify({ courseID: courseID }),
     };
 
     try {

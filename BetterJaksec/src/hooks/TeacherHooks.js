@@ -36,9 +36,9 @@ const useTeacherHook = () => {
   };
 
   /**
-   * 
+   *
    * @param {*} teacherID leave empty if you want all
-   * @returns 
+   * @returns
    */
   const getTeacher = async (teacherID) => {
     if (!teacherID) {
@@ -54,7 +54,6 @@ const useTeacherHook = () => {
     }
     const options = {
       method: "GET",
-      body: JSON.stringify({ teacherID: teacherID }),
     };
 
     try {
@@ -78,7 +77,9 @@ const useTeacherHook = () => {
     if (teacher.firstName) body.firstName = teacher.firstName;
     if (teacher.lastName) body.lastName = teacher.lastName;
     if (teacher.password) body.password = teacher.password;
-    body.isAdmin = teacher.isAdmin;
+    if (teacher.isAdmin !== undefined) {
+      body.isAdmin = teacher.isAdmin;
+    }
 
     const options = {
       method: "PUT",
@@ -87,6 +88,7 @@ const useTeacherHook = () => {
       },
       body: JSON.stringify(body),
     };
+    console.log(options);
 
     try {
       const put = await fetchData(`${baseUrl}/${teacher.teacherID}`, options);
