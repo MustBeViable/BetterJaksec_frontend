@@ -34,7 +34,22 @@ const useCourseHook = () => {
     }
   };
 
+  /**
+   * 
+   * @param {*} courseID leave empty if you want all courses
+   * @returns 
+   */
+  
   const getCourse = async (courseID) => {
+    if (!courseID) {
+      try {
+        const courseList = await fetchData(`${baseUrl}/all`, {method: "GET"});
+        if (!courseList) return false
+        return courseList;
+      } catch (error) {
+        console.log(error);
+      }
+    }
     const options = {
       method: "GET",
       body: JSON.stringify({ courseID: courseID }),

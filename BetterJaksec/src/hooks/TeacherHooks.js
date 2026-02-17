@@ -4,9 +4,9 @@ const useTeacherHook = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL + "/teacher";
 
   /**
-   * 
+   *
    * @param {*} teacher is teacher instance with, firstname, lastname, email and boolean isAdmin
-   * @returns 
+   * @returns
    */
 
   const postTeacher = async (teacher) => {
@@ -35,7 +35,23 @@ const useTeacherHook = () => {
     }
   };
 
+  /**
+   * 
+   * @param {*} teacherID leave empty if you want all
+   * @returns 
+   */
   const getTeacher = async (teacherID) => {
+    if (!teacherID) {
+      try {
+        const teacherList = await fetchData(`${baseUrl}/all`, {
+          method: "GET",
+        });
+        if (!teacherList) return false;
+        return teacherList;
+      } catch (error) {
+        console.log(error);
+      }
+    }
     const options = {
       method: "GET",
       body: JSON.stringify({ teacherID: teacherID }),
@@ -51,9 +67,9 @@ const useTeacherHook = () => {
   };
 
   /**
-   * 
+   *
    * @param {*} teacher Provide only the info that is wanted to change
-   * @returns 
+   * @returns
    */
 
   const putTeacher = async (teacher) => {
@@ -62,7 +78,7 @@ const useTeacherHook = () => {
     if (teacher.firstName) body.firstName = teacher.firstName;
     if (teacher.lastName) body.lastName = teacher.lastName;
     if (teacher.password) body.password = teacher.password;
-    body.isAdmin = teacher.isAdmin
+    body.isAdmin = teacher.isAdmin;
 
     const options = {
       method: "PUT",
@@ -73,27 +89,25 @@ const useTeacherHook = () => {
     };
 
     try {
-        const put = await fetchData(`${baseUrl}/${teacher.teacherID}`, options)
-        if (!put) return false;
-        return true;
+      const put = await fetchData(`${baseUrl}/${teacher.teacherID}`, options);
+      if (!put) return false;
+      return true;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-
   };
 
   const deleteTeacher = async (teacherID) => {
-
     const options = {
-      method: 'DELETE',
+      method: "DELETE",
     };
 
     try {
-        const deleteDone = await fetchData(`${baseUrl}/${teacherID}`, options)
-        if (!deleteDone) return false
-        return true 
+      const deleteDone = await fetchData(`${baseUrl}/${teacherID}`, options);
+      if (!deleteDone) return false;
+      return true;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 
