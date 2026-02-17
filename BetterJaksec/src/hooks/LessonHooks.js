@@ -50,7 +50,6 @@ const useLessonHook = () => {
     }
     const options = {
       method: "GET",
-      body: JSON.stringify({ teacherID: lessonID }),
     };
 
     try {

@@ -48,7 +48,6 @@ const useStudentHook = () => {
 
     const options = {
       method: "GET",
-      body: JSON.stringify({ studentID: studentID }),
     };
 
     try {
