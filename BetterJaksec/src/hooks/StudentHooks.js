@@ -27,7 +27,25 @@ const useStudentHook = () => {
     }
   };
 
+/**
+ * 
+ * @param {} studentID leave empty if you want al
+ * @returns 
+ */
+
   const getStudent = async (studentID) => {
+    if (!studentID) {
+      try {
+        const studentList = await fetchData(`${baseUrl}/all`, {
+          method: "GET",
+        });
+        if (!studentList) return false;
+        return studentList;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     const options = {
       method: "GET",
       body: JSON.stringify({ studentID: studentID }),
@@ -58,27 +76,25 @@ const useStudentHook = () => {
     };
 
     try {
-        const put = await fetchData(`${baseUrl}/${student.studentID}`, options)
-        if (!put) return false;
-        return true;
+      const put = await fetchData(`${baseUrl}/${student.studentID}`, options);
+      if (!put) return false;
+      return true;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-
   };
 
   const deleteStudent = async (studentID) => {
-
     const options = {
-      method: 'DELETE',
+      method: "DELETE",
     };
 
     try {
-        const deleteDone = await fetchData(`${baseUrl}/${studentID}`, options)
-        if (!deleteDone) return false
-        return true 
+      const deleteDone = await fetchData(`${baseUrl}/${studentID}`, options);
+      if (!deleteDone) return false;
+      return true;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 

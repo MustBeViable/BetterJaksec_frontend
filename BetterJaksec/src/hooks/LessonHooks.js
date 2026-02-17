@@ -4,7 +4,7 @@ const useLessonHook = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL + "/lesson";
 
   /**
-   * 
+   *
    * @param {*} lesson Includes instance of object with lessonName, lessonDate, courseID
    * @returns boolean
    */
@@ -33,7 +33,21 @@ const useLessonHook = () => {
     }
   };
 
+  /**
+   *
+   * @param {*} lessonID leave empty if you want all lessons
+   * @returns
+   */
   const getLesson = async (lessonID) => {
+    if (!lessonID) {
+      try {
+        const lessonList = await fetchData(`${baseUrl}/all`, { method: "GET" });
+        if (!lessonList) return false;
+        return lessonList;
+      } catch (error) {
+        console.log(error);
+      }
+    }
     const options = {
       method: "GET",
       body: JSON.stringify({ teacherID: lessonID }),
@@ -49,7 +63,7 @@ const useLessonHook = () => {
   };
 
   /**
-   * 
+   *
    * @param {*} lesson provide only that you want to change.
    * @returns boolean
    */
@@ -70,27 +84,25 @@ const useLessonHook = () => {
     };
 
     try {
-        const put = await fetchData(`${baseUrl}/${lesson.lessonID}`, options)
-        if (!put) return false;
-        return true;
+      const put = await fetchData(`${baseUrl}/${lesson.lessonID}`, options);
+      if (!put) return false;
+      return true;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-
   };
 
   const deleteLesson = async (lessinID) => {
-
     const options = {
-      method: 'DELETE',
+      method: "DELETE",
     };
 
     try {
-        const deleteDone = await fetchData(`${baseUrl}/${lessinID}`, options)
-        if (!deleteDone) return false
-        return true 
+      const deleteDone = await fetchData(`${baseUrl}/${lessinID}`, options);
+      if (!deleteDone) return false;
+      return true;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 
