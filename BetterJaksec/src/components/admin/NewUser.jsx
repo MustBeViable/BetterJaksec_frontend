@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useStudentHook from "../../hooks/StudentHooks";
+import useTeacherHook from "../../hooks/TeacherHooks";
 
 const NewUser = () => {
   const navigate = useNavigate();
@@ -7,12 +9,35 @@ const NewUser = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("teacher");
+  const { postStudent } = useStudentHook();
+  const { postTeacher } = useTeacherHook();
 
-  useEffect(()=> {
-    /*
-    api call here and add it to the submit button down
-    */
-  })
+  const handlePost = async () => {
+    if (role === "teacher" || role === "admin") {
+      const teacher = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        isAdmin: role === "admin" ? true : false,
+      };
+      const success = await postTeacher(teacher);
+      return success;
+    }
+    const student = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+    };
+    const success = await postStudent(student);
+    return success;
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const ok = await handlePost();
+    if (ok) navigate("/admin/users");
+  };
 
   useEffect(() => {
     const generateEmail = () => {
@@ -38,7 +63,7 @@ const NewUser = () => {
   return (
     <div>
       <h1>New user</h1>
-      <form action="">
+      <form onSubmit={onSubmit}>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <label htmlFor="newUserFirstName">First name: </label>
           <input
@@ -58,6 +83,17 @@ const NewUser = () => {
               setLastName(evt.target.value);
             }}
           />
+          <label htmlFor="role">Select role: </label>
+          <select
+            name="role"
+            id="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+          </select>
           <label htmlFor="newUserEmail">Generated email: </label>
           <input
             type="email"
