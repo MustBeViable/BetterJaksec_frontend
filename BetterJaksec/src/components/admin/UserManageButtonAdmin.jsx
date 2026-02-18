@@ -2,7 +2,7 @@ import React from 'react'
 
 const UserManageButtonAdmin = ({user, setSelectedUser}) => {
   return (
-    <button onClick={() => {setSelectedUser(user)}}>{user.name}</button>
+    <button onClick={() => {setSelectedUser(user)}}>{user.firstName} {user.lastName}</button>
   )
 }
 

@@ -1,32 +1,19 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserManageButtonAdmin from "../../components/admin/UserManageButtonAdmin";
 import UserManageCard from "../../components/admin/UserManageCard";
+import useTeacherHook from "../../hooks/TeacherHooks";
+import useStudentHook from "../../hooks/StudentHooks";
 
 const ManageUsers = () => {
-  //dummy data
-  const dummyProps = useMemo(() => {
-    const arr = [];
-    const length = 100;
 
-    for (let i = 0; i < length; i++) {
-      let user;
-
-      if (i % 10 === 0) {
-        user = { id: i, name: `filterTest${i}`, role: "admin" };
-      } else if (i % 2 === 0 && i % 10 != 0) {
-        user = { id: i, name: `name${i}`, role: "student" };
-      } else {
-        user = { id: i, name: `name${i}`, role: "teacher" };
-      }
-      arr.push(user);
-    }
-    return arr;
-  }, []);
-
+  const {getTeacher} = useTeacherHook();
+  const {getStudent} = useStudentHook();
   const navigate = useNavigate();
-  const [userList, setUserList] = useState(dummyProps);
-  const [filteredUserList, setFilteredUserList] = useState(dummyProps);
+  const [userList, setUserList] = useState([]);
+  //Handles rerenders adter adding new user
+  const [change, setChange] = useState(false);
+  const [filteredUserList, setFilteredUserList] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [selectedUser, setSelectedUser] = useState();
 
@@ -39,11 +26,18 @@ const ManageUsers = () => {
   //initial render. API call here
   useEffect(() => {
     const handleList = async () => {
-      setUserList(dummyProps);
-      setFilteredUserList(dummyProps);
+      const teachers = await getTeacher();
+      const students = await getStudent();
+      if (!teachers && !students) {
+        window.alert("No teacher/student found")
+      }
+      const combined = [...teachers, ...students]
+      setUserList(combined);
+      setFilteredUserList(combined);
+      if (change) setChange(false);
     };
     handleList();
-  }, []);
+  }, [change]);
 
   //filtering render
   useEffect(() => {
@@ -59,7 +53,7 @@ const ManageUsers = () => {
   return (
     <div>
       {selectedUser && (
-        <UserManageCard user={selectedUser} setSelectedUser={setSelectedUser} />
+        <UserManageCard user={selectedUser} setSelectedUser={setSelectedUser} setChange={setChange} />
       )}
 
       {!selectedUser && (
