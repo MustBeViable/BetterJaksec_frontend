@@ -13,6 +13,7 @@ import AdminAttendanceTrackingView from "./views/admin/AdminAttendanceTrackingVi
 import CoursesView from "./views/user/CoursesView";
 import ManageCourses from "./views/user/ManageCourses";
 import { UserProvider } from "./contexts/UserContext.jsx";
+import ManageLessons from "./views/user/ManageLessons";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         />
         <Route path="/courses" element={<CoursesView />} />
         <Route path="/courses/manage" element={<ManageCourses />} />
+        <Route path="/courses/manage/manage_lessons" element={<ManageLessons />} />
         {/* Admin routing here */}
         <Route path="/admin" element={<AdminView />}>
           <Route index element={<MainScreenAdmin />} />

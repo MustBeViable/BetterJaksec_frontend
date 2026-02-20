@@ -2,18 +2,37 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useStudentHook from "../../hooks/StudentHooks";
 import useTeacherHook from "../../hooks/TeacherHooks";
+import useEmailHook from "../../hooks/EmailHooks";
 
 const NewUser = () => {
   const navigate = useNavigate();
   const schoolEmail = "metropolia.fi";
+  const [newEmailChange, setNewEmailChange] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("teacher");
   const { postStudent } = useStudentHook();
   const { postTeacher } = useTeacherHook();
+  const { checkEmail } = useEmailHook();
 
   const handlePost = async () => {
+    let emailAvailable = await checkEmail(email);
+    if (!emailAvailable) return console.log("API connection error");
+    if (!emailAvailable.isAvailable) {
+      let newEmail;
+      let index = 1;
+      do {
+        newEmail = `${firstName}${index}.${lastName}@${schoolEmail}`;
+        emailAvailable = await checkEmail(newEmail);
+        if (emailAvailable.isAvailable) {
+          setEmail(newEmail);
+          setNewEmailChange(!setNewEmailChange);
+          window.alert(`User new email: ${newEmail}`);
+          return;
+        }
+      } while (!emailAvailable.isAvailable);
+    }
     if (role === "teacher" || role === "admin") {
       const teacher = {
         firstName: firstName,
@@ -47,18 +66,11 @@ const NewUser = () => {
       if (lastName.trim() === "") {
         return;
       }
-      //add email checking for DB here
       let email = `${firstName}.${lastName}@${schoolEmail}`;
-      /* esim jtn tämmöstä (index voi tulla db esim tms)
-        if (!validEmail) {
-            email = `${firstName}${index}.${lastName}@${schoolEmail}`
-            checkEmailMethod(email);
-        }
-        */
       setEmail(email);
     };
     generateEmail();
-  }, [firstName, lastName]);
+  }, [firstName, lastName, newEmailChange]);
 
   return (
     <div>
