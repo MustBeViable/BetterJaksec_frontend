@@ -4,9 +4,9 @@ const useCourseHook = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL + "/course";
 
   /**
-   * 
-   * @param {*} course instance with courseName, lessonIds (list, can be empty), assignmentsIds (same as lessonid)
-   * @returns 
+   *
+   * @param {*} course instance with courseName, lessonIds (list, can be empty), assignmentsIds (same as lessonid), teaherID cannot be null
+   * @returns
    */
 
   const postCourse = async (course) => {
@@ -35,16 +35,16 @@ const useCourseHook = () => {
   };
 
   /**
-   * 
+   *
    * @param {*} courseID leave empty if you want all courses
-   * @returns 
+   * @returns
    */
-  
+
   const getCourse = async (courseID) => {
     if (!courseID) {
       try {
-        const courseList = await fetchData(`${baseUrl}/all`, {method: "GET"});
-        if (!courseList) return false
+        const courseList = await fetchData(`${baseUrl}/all`, { method: "GET" });
+        if (!courseList) return false;
         return courseList;
       } catch (error) {
         console.log(error);
@@ -64,9 +64,9 @@ const useCourseHook = () => {
   };
 
   /**
-   * 
-   * @param {*} course provide infon that you are willing to change
-   * @returns 
+   *
+   * @param {*} course provide info that you are willing to change
+   * @returns
    */
 
   const putCourse = async (course) => {
@@ -86,27 +86,25 @@ const useCourseHook = () => {
     };
 
     try {
-        const put = await fetchData(`${baseUrl}/${course.courseID}`, options)
-        if (!put) return false;
-        return true;
+      const put = await fetchData(`${baseUrl}/${course.courseID}`, options);
+      if (!put) return false;
+      return true;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-
   };
 
   const deleteCourse = async (courseID) => {
-
     const options = {
-      method: 'DELETE',
+      method: "DELETE",
     };
 
     try {
-        const deleteDone = await fetchData(`${baseUrl}/${courseID}`, options)
-        if (!deleteDone) return false
-        return true 
+      const deleteDone = await fetchData(`${baseUrl}/${courseID}`, options);
+      if (!deleteDone) return false;
+      return true;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
   };
 

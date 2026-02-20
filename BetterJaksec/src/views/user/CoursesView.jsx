@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useCourseHook from "../../hooks/CourseHook";
 
 const CoursesView = () => {
-  // Dummy data: teacher's courses
-  const testCourses = [
-    { id: 1, name: "Course1" },
-    { id: 2, name: "Course2" },
-    { id: 3, name: "Course3" },
-    { id: 4, name: "Course4" },
-  ];
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
+  const { getCourse } = useCourseHook();
 
   useEffect(() => {
-    const renderCourses = () => {
-      //api call
-      setCourses(testCourses);
+    const renderCourses = async () => {
+      const dbCourses = await getCourse();
+      setCourses(dbCourses);
+      dbCourses.forEach((c) => console.log(c));
     };
     renderCourses();
-  }, [courses]);
+  }, []);
 
   return (
     <div style={{ padding: "32px" }}>
@@ -36,7 +32,13 @@ const CoursesView = () => {
           }}
         >
           <h1>Courses</h1>
-          <button onClick={()=> {navigate("/")}}>Return</button>
+          <button
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Return
+          </button>
         </div>
 
         <h2>List of courses:</h2>
