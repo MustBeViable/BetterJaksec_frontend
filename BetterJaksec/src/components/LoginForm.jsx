@@ -1,26 +1,24 @@
-import React, { useState //,useContext
- } from "react";
-//import { UserContext } from "../contexts/UserContext";
+import React, { useState,useContext} from "react";
+import { UserContext } from "../contexts/UserContext";
 
 
 export default function LoginForm() {
-  //  const { handleLogin } = useContext(UserContext);
-  const [username, setUsername] = useState("");
+  const { handleLogin } = useContext(UserContext);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
 
 return(
     <form onSubmit={(e) => { e.preventDefault();
-    //handleLogin
-    console.log(username, password);
-}}>
+        handleLogin({ email: email, password: password });}}>
+            
     <h2>Login</h2>
-    <div id="loginUsername">
-        <label htmlFor="loginUsername">Username</label>
-        <input id="loginUsername"
+    <div id="loginEmail">
+        <label htmlFor="loginEmail">Email</label>
+        <input id="loginEmail"
         type="text"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         />
     </div>
 

@@ -1,14 +1,21 @@
-const fetchData = async ( url, options = {}) => {
+const fetchData = async (url, options = {}) => {
   const response = await fetch(url, options);
+
   if (response.status === 204) return true;
-  const json = await response.json();
-  if (!response.ok) {
-    if (json.message) {
-      throw new Error(json.message);
-    }
-    throw new Error(`Error ${response.status} occured`);
+
+  let data = null;
+
+  try {
+    data = await response.json();
+  } catch (err) {
+    data = null;
   }
-  return json;
+
+  if (!response.ok) {
+    throw new Error(data?.message || `Error ${response.status}`);
+  }
+
+  return data;
 };
 
-export {fetchData};
+export { fetchData };

@@ -1,39 +1,26 @@
 import { fetchData } from "../utils/fetchData";
 
-const useAuthentication = ()=>{
-const postLogin = async (inputs) => {
-   const fetchOptions = {
-     method: 'POST',
-     headers: {
-       'Content-Type': 'application/json',
-     },
-     body: JSON.stringify(inputs),
-   };
-   const loginResult = await fetchData(import.meta.env.API + '/auth/login', fetchOptions);
-   return loginResult;
- };
-return {postLogin}}
+const useAuthentication = () => {
+  const postLogin = async (inputs) => {
+    return await fetchData("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(inputs),
+    });
+  };
 
-const useUser = ()=>{
-const getUserByToken=async ()=> {
-  const token =localStorage.getItem("token")
-  try {
-      if (!token) throw new Error("No token found");
+  return { postLogin };
+};
 
-      const userData = await fetchData(import.meta.env.API + "/users/token", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      });
+const useUser = () => {
+  const getUserByToken = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token found");
 
-      return userData;
-      } catch (err) {
-            console.error("getUserByToken error:", err.message);
-            throw err;
-          }
-        };
-
-
+    return await fetchData(`/api/auth/me/${token}`);
+  };
 
   return { getUserByToken };
 };
+
+export { useAuthentication, useUser };

@@ -12,11 +12,13 @@ import NewUser from "./components/admin/NewUser";
 import AdminAttendanceTrackingView from "./views/admin/AdminAttendanceTrackingView";
 import CoursesView from "./views/user/CoursesView";
 import ManageCourses from "./views/user/ManageCourses";
+import { UserProvider } from "./contexts/UserContext.jsx";
 import ManageLessons from "./views/user/ManageLessons";
 
 function App() {
   return (
     <BrowserRouter>
+    <UserProvider>
       <Routes>
         <Route path="/login" element={<LogIn />} />
         <Route path="/" element={<MainScreen />} />
@@ -41,7 +43,9 @@ function App() {
           element={<AdminAttendanceTrackingView />}
         />
       </Routes>
+      </UserProvider>
     </BrowserRouter>
+
   );
 }
 
