@@ -1,5 +1,6 @@
 const fetchData = async ( url, options = {}) => {
   const response = await fetch(url, options);
+  if (response.status === 204) return true;
   const json = await response.json();
   if (!response.ok) {
     if (json.message) {

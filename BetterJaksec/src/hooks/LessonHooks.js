@@ -1,19 +1,31 @@
 import { fetchData } from "../utils/fetchData";
 
+const normalizeDateToIso = (value) => {
+  if (!value) return null;
+
+  // jos Date-objekti
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+
+  // jos string (YYYY-MM-DD tai ISO)
+  return new Date(value).toISOString();
+};
+
 const useLessonHook = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL + "/lesson";
 
   /**
    *
    * @param {*} lesson Includes instance of object with lessonName, lessonDate, courseID
-   * @returns boolean
+   * @returns lesson instance
    */
 
   const postLesson = async (lesson) => {
     const body = {
       lessonName: lesson.lessonName,
-      lessonDate: lesson.lessonDate,
-      courseID: lesson.courseID,
+      date: normalizeDateToIso(lesson.lessonDate),
+      courseId: lesson.courseID,
     };
 
     const options = {
@@ -24,10 +36,12 @@ const useLessonHook = () => {
       body: JSON.stringify(body),
     };
 
+    console.log("body: ", body)
+
     try {
-      const post = await fetchData(baseUrl, options);
-      if (!post) return false;
-      return true;
+      const lesson = await fetchData(baseUrl, options);
+      if (!lesson) return false;
+      return lesson;
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +97,7 @@ const useLessonHook = () => {
     };
 
     try {
-      const put = await fetchData(`${baseUrl}/${lesson.lessonID}`, options);
+      const put = await fetchData(`${baseUrl}/${lesson.lessonId}`, options);
       if (!put) return false;
       return true;
     } catch (error) {
@@ -91,13 +105,13 @@ const useLessonHook = () => {
     }
   };
 
-  const deleteLesson = async (lessinID) => {
+  const deleteLesson = async (lessonID) => {
     const options = {
       method: "DELETE",
     };
 
     try {
-      const deleteDone = await fetchData(`${baseUrl}/${lessinID}`, options);
+      const deleteDone = await fetchData(`${baseUrl}/${lessonID}`, options);
       if (!deleteDone) return false;
       return true;
     } catch (error) {
