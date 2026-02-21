@@ -1,29 +1,15 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+import useStudentHook from "../../hooks/StudentHooks";
 
-const AddUserCourse = ({setIsAddUserOpen}) => {
-  const dummyStudents = [
-    { studentID: 1, firstName: "Anna", lastName: "Korhonen" },
-    { studentID: 2, firstName: "Mikko", lastName: "Virtanen" },
-    { studentID: 3, firstName: "Laura", lastName: "Mäkinen" },
-    { studentID: 4, firstName: "Jussi", lastName: "Lahtinen" },
-    { studentID: 5, firstName: "Emma", lastName: "Salonen" },
-  ];
-
-  const studentsWithGrade = useMemo(
-    () =>
-      dummyStudents.map((s, idx) => ({
-        ...s,
-        gradeLevel: `grade level${(idx % 3) + 1}`,
-      })),
-    []
-  );
-
-  // tää o filteröintii varten, muokataa/poistetaa tarvittaes
+const AddUserCourse = ({ setIsAddUserOpen }) => {
   const gradeOptions = ["all", "grade level1", "grade level2", "grade level3"];
 
   const [search, setSearch] = useState("");
   const [grade, setGrade] = useState("all");
   const [selectedIds, setSelectedIds] = useState(() => new Set());
+  const [studentList, setStudentList] = useState([]);
+  const [visibleStudentList, setVisibleStudentList] = useState([]);
+  const { getStudent } = useStudentHook();
 
   const toggleStudent = (id) => {
     setSelectedIds((prev) => {
@@ -34,32 +20,62 @@ const AddUserCourse = ({setIsAddUserOpen}) => {
     });
   };
 
-  const visibleStudents = useMemo(() => {
-    const studentQuery = search.trim().toLowerCase();
+  const filterStudents = (studentQuery) => {
+    setVisibleStudentList(
+      studentList.filter((s) => {
+        const fullName = `${s.firstName} ${s.lastName}`.toLowerCase();
+        const matchesSearch =
+          studentQuery === "" ? true : fullName.includes(studentQuery);
+        return matchesSearch;
+      }),
+    );
+  };
 
-    const filteredStudents = studentsWithGrade.filter((s) => {
-        //tänne maholliset filteröinti haut ja "return matchesSearch && matcherFilter"
-        // -> silloin palauttaa true jos molemmat ehdot käy
-      const fullName = `${s.firstName} ${s.lastName}`.toLowerCase();
-      const matchesSearch = studentQuery === "" ? true : fullName.includes(studentQuery);
-      return matchesSearch;
-    });
+  useEffect(() => {
+    const sortStudentList = () => {
+      setVisibleStudentList((prev) => {
+        const next = [...prev];
+        next.sort((a, b) => {
+          const aSelected = selectedIds.has(a.studentID);
+          const bSelected = selectedIds.has(b.studentID);
+          if (aSelected !== bSelected) return aSelected ? -1 : 1;
+          return `${a.firstName} ${a.lastName}`.localeCompare(
+            `${b.firstName} ${b.lastName}`,
+          );
+        });
+        return next;
+      });
+    };
+    sortStudentList();
+  }, [selectedIds]);
 
-    const selected = [];
-    const unselected = [];
+  useEffect(() => {
+    const handleFilter = () => {
+      filterStudents(search);
+    };
+    handleFilter();
+  }, [search]);
 
-    for (const student of filteredStudents) {
-      if (selectedIds.has(student.studentID)) selected.push(student);
-      else unselected.push(student);
-    }
-
-    // Järjestää eka valitut ja sitten ei valitut.
-    return [...selected, ...unselected];
-  }, [studentsWithGrade, grade, search, selectedIds]);
+  useEffect(() => {
+    const initialStudents = async () => {
+      const students = await getStudent();
+      if (!students) return;
+      setStudentList(students);
+      setVisibleStudentList(students);
+    };
+    initialStudents();
+  }, []);
 
   return (
     <div style={{ padding: "24px" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px", backgroundColor: "#000000" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+          backgroundColor: "#000000",
+        }}
+      >
         <h2>Search users:</h2>
 
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
@@ -87,7 +103,7 @@ const AddUserCourse = ({setIsAddUserOpen}) => {
             alignContent: "flex-start",
           }}
         >
-          {visibleStudents.map((s) => {
+          {visibleStudentList.map((s) => {
             const isSelected = selectedIds.has(s.studentID);
             return (
               <button
@@ -97,20 +113,28 @@ const AddUserCourse = ({setIsAddUserOpen}) => {
                 onClick={() => toggleStudent(s.studentID)}
                 style={{
                   background: isSelected ? "#7bdc9a" : "#e0e0e0",
-                  color: "#030000"
+                  color: "#030000",
                 }}
               >
                 {s.firstName} {s.lastName}
               </button>
             );
           })}
-          <button onClick={()=> {
-            //set api call request here
-            setIsAddUserOpen(false);
-          }} >Save</button>
-          <button onClick={()=> {
-            setIsAddUserOpen(false);
-          }}>Return</button>
+          <button
+            onClick={() => {
+              //set api call request here
+              setIsAddUserOpen(false);
+            }}
+          >
+            Save
+          </button>
+          <button
+            onClick={() => {
+              setIsAddUserOpen(false);
+            }}
+          >
+            Return
+          </button>
         </div>
       </div>
     </div>
