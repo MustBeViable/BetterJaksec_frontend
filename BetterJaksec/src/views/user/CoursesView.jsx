@@ -52,7 +52,7 @@ const CoursesView = () => {
             flexDirection: "column",
           }}
         >
-          {courses.map((course) => (
+          {courses?.map((course) => (
             <button
               key={course.id}
               style={{

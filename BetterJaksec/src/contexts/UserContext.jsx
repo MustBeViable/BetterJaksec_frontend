@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import { useAuthentication, useUser } from "../hooks/apiHooks";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext(null);
 
