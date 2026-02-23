@@ -3,13 +3,16 @@ import { fetchData } from "../utils/fetchData";
 const baseUrl = "/api/student/grade";
 
 const useStudentCourse = () => {
- 
   const createGrade = async ({ studentId, courseId, grade }) => {
     return await fetchData(baseUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ studentId, courseId, grade }),
     });
+  };
+
+  const getCourseStudents = async (courseId) => {
+    return await fetchData(`${baseUrl}/course/${courseId}/students`);
   };
 
   const getGrade = async (gradeId) => {
@@ -24,7 +27,8 @@ const useStudentCourse = () => {
     });
   };
 
-  return { createGrade, getGrade, putGrade };
+
+  return { createGrade, getGrade, getCourseStudents, putGrade };
 };
 
 export default useStudentCourse;
