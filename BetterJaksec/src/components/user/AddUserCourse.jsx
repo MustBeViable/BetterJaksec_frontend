@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import useStudentHook from "../../hooks/StudentHooks";
+import useStudentCourse from "../../hooks/StudentCourseHook";
 
-const AddUserCourse = ({ setIsAddUserOpen }) => {
+const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
   const gradeOptions = ["all", "grade level1", "grade level2", "grade level3"];
 
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState("");
+  const [submit, setSubmit] = useState(false);
   const [grade, setGrade] = useState("all");
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [studentList, setStudentList] = useState([]);
   const [visibleStudentList, setVisibleStudentList] = useState([]);
   const { getStudent } = useStudentHook();
+  const { createGrade } = useStudentCourse();
 
   const toggleStudent = (id) => {
     setSelectedIds((prev) => {
@@ -30,6 +34,28 @@ const AddUserCourse = ({ setIsAddUserOpen }) => {
       }),
     );
   };
+
+  const handleStudentUpdate = async () => {
+    const requests = [...selectedIds].map((studentId) => {
+      const body = {
+        studentId,
+        courseId: course.id,
+        grade: 0,
+      };
+      return createGrade(body);
+    });
+
+    const results = await Promise.all(requests);
+    return results.every(Boolean);
+  };
+
+  useEffect(() => {
+    const loading = () => {
+      if (submit) setLoading("loading...");
+      if (!submit) setLoading("");
+    };
+    loading;
+  }, [submit]);
 
   useEffect(() => {
     const sortStudentList = () => {
@@ -103,7 +129,7 @@ const AddUserCourse = ({ setIsAddUserOpen }) => {
             alignContent: "flex-start",
           }}
         >
-          {visibleStudentList.map((s) => {
+          {visibleStudentList?.map((s) => {
             const isSelected = selectedIds.has(s.studentID);
             return (
               <button
@@ -120,10 +146,19 @@ const AddUserCourse = ({ setIsAddUserOpen }) => {
               </button>
             );
           })}
+          <p>{loading}</p>
           <button
-            onClick={() => {
-              //set api call request here
-              setIsAddUserOpen(false);
+            onClick={async () => {
+              setSubmit(true);
+              const ok = await handleStudentUpdate();
+              if (!ok) {
+                window.alert("Joku lisäys epäonnistui");
+                return;
+              } else {
+                setSubmit(false);
+                setRefresh((prev) => !prev);
+                setIsAddUserOpen(false);
+              }
             }}
           >
             Save
