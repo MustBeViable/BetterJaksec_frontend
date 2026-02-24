@@ -1,22 +1,31 @@
 const fetchData = async (url, options = {}) => {
-  const response = await fetch(url, options);
+  console.log("fetchData calling:", url);
+  const token = localStorage.getItem("token");
+  const headers = {
+    ...(options.headers || {}),
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  console.log("fetchData headers:", headers);
+  
+  const response = await fetch(url, {
+    ...options,
+    headers,
+  });
+
+  console.log("fetchData response status:", response.status);
 
   if (response.status === 204) return true;
 
   let data = null;
-
   try {
-    // Clone allows safe logging without consuming original body
-    const clone = response.clone();
-
-    // Optional: log the raw response
-    const text = await clone.text();
-    console.log("Fetched response:", text);
-
-    // Then parse JSON from original response
     data = await response.json();
-  } catch (err) {
-    console.log("Failed to parse JSON:", err);
+    console.log("fetchData parsed data:", data);
+  } catch (e) {
+    console.log("fetchData JSON parse error:", e);
     data = null;
   }
 
@@ -26,5 +35,4 @@ const fetchData = async (url, options = {}) => {
 
   return data;
 };
-
-export { fetchData };
+export {fetchData}
