@@ -1,7 +1,7 @@
 import { createContext, useState,useEffect } from "react";
 import { useAuthentication, useUser } from "../hooks/AuthHooks";
 import { useNavigate } from "react-router";
-
+//.
 const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {

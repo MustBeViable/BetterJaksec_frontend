@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import CourseList from "../../components/CourseList";
 import ClassAttendanceStatsAdmin from "../../components/admin/ClassAttendanceStatsAdmin";
 import useCourseHook from "../../hooks/CourseHook";
+//.
 
 const AdminAttendanceTrackingView = () => {
   const { getCourse } = useCourseHook();

@@ -1,4 +1,5 @@
 import React from "react";
+//.
 
 export default function AttendanceCircle({ attended, total, size = 250 }) {
   const percentage = total > 0 ? Math.round((attended / total) * 100) : 0;

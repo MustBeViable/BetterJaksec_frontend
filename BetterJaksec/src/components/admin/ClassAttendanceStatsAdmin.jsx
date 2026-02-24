@@ -1,5 +1,6 @@
 import React from "react";
 
+//.
 const ClassAttendanceStatsAdmin = ({ students, totalClasses }) => {
   let totalAttended = 0;
   students.forEach(student => {

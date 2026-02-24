@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/AuthHooks";
+//.
 
 const ProfilePage = () => {
   const { getUserByToken } = useUser();

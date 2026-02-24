@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "../../hooks/AuthHooks";
 import useStudentHook from "../../hooks/StudentHooks";
 import AttendanceCircle from "../../components/AttendanceCircle";
-
+//.
 const AttendanceTrackingView = () => {
   const { getUserByToken } = useUser();
   const { getStudent } = useStudentHook();

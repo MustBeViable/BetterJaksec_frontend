@@ -4,6 +4,7 @@ import { useUser } from "../../hooks/AuthHooks";
 import useStudentHook from "../../hooks/StudentHooks";
 import useTeacherHook from "../../hooks/TeacherHooks";
 
+//.
 const ChangePasswordPage = () => {
   const navigate = useNavigate();
   const { getUserByToken } = useUser();
