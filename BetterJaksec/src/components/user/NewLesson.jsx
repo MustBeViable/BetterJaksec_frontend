@@ -170,8 +170,6 @@ const NewLesson = ({
           Delete lesson
         </button>
       )}
-
-      <pre>{JSON.stringify({ lessonName, lessonDate }, null, 2)}</pre>
     </div>
   );
 };

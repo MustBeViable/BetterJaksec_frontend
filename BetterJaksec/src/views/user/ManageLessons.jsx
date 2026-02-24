@@ -23,7 +23,7 @@ const ManageLessons = () => {
     }
 
     const lessons = await Promise.all(
-      ids.map(async (id) => {
+      ids?.map(async (id) => {
         try {
           const res = await getLesson(id);
           return res ?? null;
@@ -37,14 +37,19 @@ const ManageLessons = () => {
   };
 
   useEffect(() => {
-    if (!state?.course) return;
-    setCourse(state.course);
+    const initCourse = () => {
+      if (!state?.course) return;
+      setCourse(state.course);
+    };
+    initCourse();
   }, [state]);
 
   useEffect(() => {
-    if (!course) return;
-    refreshLessons(course);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const refreshPage = () => {
+      if (!course) return;
+      refreshLessons(course);
+    };
+    refreshPage();
   }, [course?.id, refreshKey]);
 
   return (
@@ -103,6 +108,7 @@ const ManageLessons = () => {
               background: "#ffffff",
               padding: "16px",
               borderRadius: "8px",
+              color: "#000000"
             }}
           >
             <h2>Lessons:</h2>
@@ -118,6 +124,7 @@ const ManageLessons = () => {
                     background: "#d9d9d9",
                     padding: "12px",
                     textAlign: "left",
+                    color: "#000000ff"
                   }}
                   onClick={() => {
                     setSelectedLesson(lesson);
