@@ -1,59 +1,63 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import CourseList from "../../components/CourseList";
+import React from "react";
+import useStudentData from "../../hooks/UseStudentDataHook";
+import AttendanceCircle from "../../components/AttendanceCircle";
 
 const AttendanceTrackingView = () => {
-  const [courses] = useState([
-    { name: "English" },
-    { name: "Math" },
-    { name: "Physkkkkkkkkkkkkkics" },
-    { name: "Biology" },
-  ]);
+  const student = useStudentData();
+  if (!student) return <div>Loading...</div>;
 
-  const [items] = useState([
-    { date: "01.10.2020", attendance: "yes" },
-    { date: "02.10.2020", attendance: "no" },
-    { date: "03.10.2020", attendance: "yes" },
-    { date: "04.10.2020", attendance: "no" },
-    { date: "05.10.2020", attendance: "yes" },
-  ]);
+  const totalLessons = student.attendance?.length || 0;
+  const attendedLessons =
+    student.attendance?.filter((item) => item.present).length || 0;
 
   return (
-<div style={{ display: "flex", flexDirection: "column", width: "300px", height: "300px", justifyContent: "space-between" }}>
-  
-  {/* Top row */}
-  <div style={{ display: "flex", justifyContent: "space-between" }}>
-    {/* Courses top-left */}
-    <CourseList courses={courses} />
-
-    {/* Navbar top-right */}
-    <div>
-      <Link to="/">Main</Link>
-      <Link to="">Return</Link>
-    </div>
-  </div>
-
-
-  <div style={{ display: "flex", justifyContent: "space-between" }}>
-  {/* Attendance bottom-left */}
-  <div style={{ border: "1px solid black", maxHeight: "150px", overflowY: "auto" }}>
-    {items.map((item, index) => (
-      <div
-        key={index}
-        style={{
-          padding: "5px",
-          backgroundColor: item.attendance === "yes" ? "#d4edda" : "#f8d7da",
-        }}
-      >
-        {item.date} — {item.attendance}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "50px",
+        gap: "60px",
+      }}
+    >
+      {/* Attendance list */}
+      <div style={{ flex: 2 }}>
+        <h2 style={{ marginBottom: "20px" }}>Attendance List</h2>
+        <div
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            padding: "20px",
+            maxHeight: "600px",
+            overflowY: "auto",
+          }}
+        >
+          {student.attendance?.map((item, index) => (
+            <div
+              key={index}
+              style={{
+                padding: "14px",
+                marginBottom: "12px",
+                borderRadius: "6px",
+                backgroundColor: item.present ? "#d4edda" : "#f8d7da",
+                fontSize: "20px",
+              }}
+            >
+              {new Date(item.lessonDate).toLocaleDateString()} —{" "}
+              {item.present ? "yes" : "no"}
+            </div>
+          ))}
+        </div>
       </div>
-      
-    ))}
-    </div>
 
-    <p>attendance %</p>
+      {/* Attendance circle */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1 }}>
+        <AttendanceCircle
+          attended={attendedLessons}
+          total={totalLessons}
+          size={250}
+        />
+      </div>
     </div>
-</div>
   );
 };
 

@@ -1,40 +1,38 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import CourseList from "../../components/CourseList";
 import ClassAttendanceStatsAdmin from "../../components/admin/ClassAttendanceStatsAdmin";
+import useTeacherCourses from "../../hooks/UseTeacherCourses";
 
 const AdminAttendanceTrackingView = () => {
-  const [courses] = useState([
-    { name: "English" },
-    { name: "Math" },
-    { name: "Physics" },
-    { name: "Biology" },
-  ]);
+  const { courses, loading } = useTeacherCourses();
 
-  const [Users] = useState([
+  // For demo purposes, student attendance
+  const [Users] = React.useState([
     { name: "Jukka", attendedClasses: 18 },
     { name: "Pekka", attendedClasses: 15 },
     { name: "Liisa", attendedClasses: 20 },
   ]);
 
+  if (loading) return <div>Loading courses...</div>;
+
   return (
-<div style={{ display: "flex", flexDirection: "column", width: "300px", height: "300px", justifyContent: "space-between" }}>
+    <div style={{ display: "flex", flexDirection: "column", width: "300px", height: "300px", justifyContent: "space-between" }}>
+      {/* Top row */}
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {/* Courses top-left */}
+        <CourseList courses={courses} />
 
-  {/* Top row */}
-  <div style={{ display: "flex", justifyContent: "space-between" }}>
-    {/* Courses top-left */}
-    <CourseList courses={courses} />
+        {/* Navbar top-right */}
+        <div>
+          <Link to="/">Main</Link>
+          <Link to="">Return</Link>
+        </div>
+      </div>
 
-    {/* Navbar top-right */}
-    <div>
-      <Link to="/">Main</Link>
-      <Link to="">Return</Link>
+      {/* Bottom row: attendance stats */}
+      <ClassAttendanceStatsAdmin students={Users} totalClasses={20} />
     </div>
-
- {/* BOTTOMROW */}
-  </div>
-<ClassAttendanceStatsAdmin students={Users} totalClasses={20} />
-</div>
   );
 };
 
