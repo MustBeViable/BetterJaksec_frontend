@@ -1,5 +1,5 @@
-import { createContext, useState } from "react";
-import { useAuthentication, useUser } from "../hooks/apiHooks";
+import { createContext, useState,useEffect } from "react";
+import { useAuthentication, useUser } from "../hooks/AuthHooks";
 import { useNavigate } from "react-router";
 
 const UserContext = createContext(null);
@@ -42,7 +42,7 @@ const UserProvider = ({ children }) => {
       if (!token) return;
 
       const userData = await getUserByToken();
-
+      console.log(userData)
       setUser(userData);
     } catch (e) {
       console.log("Auto-login failed:", e.message);
@@ -50,6 +50,12 @@ const UserProvider = ({ children }) => {
       setUser(null);
     }
   };
+  useEffect(() => {
+  const tryAutoLogin = async () => {
+    await handleAutoLogin();
+  };
+  tryAutoLogin();
+}, []);
 
   return (
     <UserContext.Provider
