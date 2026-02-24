@@ -11,7 +11,6 @@ const CoursesView = () => {
     const renderCourses = async () => {
       const dbCourses = await getCourse();
       setCourses(dbCourses);
-      dbCourses.forEach((c) => console.log(c));
     };
     renderCourses();
   }, []);
@@ -52,7 +51,7 @@ const CoursesView = () => {
             flexDirection: "column",
           }}
         >
-          {courses.map((course) => (
+          {courses?.map((course) => (
             <button
               key={course.id}
               style={{

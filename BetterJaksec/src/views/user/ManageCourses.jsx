@@ -3,16 +3,21 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AddUserCourse from "../../components/user/AddUserCourse";
 import useStudentHooks from "../../hooks/StudentHooks";
 import useCourseHooks from "../../hooks/CourseHook";
+import useStudentCourse from "../../hooks/StudentCourseHook";
 
 const ManageCourses = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
+  const [refresh, setRefresh] = useState(false);
+  const [removeModal, setRemoveModal] = useState(false);
+  const [removeStudet, setRemoveStudent] = useState();
   const [course, setCourse] = useState(null);
   const [courseStudents, setCourseStudents] = useState();
   const [courseName, setCourseName] = useState("");
   const [courseTeachers, setCourseTeachers] = useState([]);
   const [courseLessons, setCourseLessons] = useState([]);
   const [isAddUsersOpen, setIsAddUsersOpen] = useState(false);
+  const { getCourseStudents } = useStudentCourse();
   const { getStudent } = useStudentHooks();
   const { postCourse, putCourse, deleteCourse } = useCourseHooks();
 
@@ -42,7 +47,6 @@ const ManageCourses = () => {
   };
 
   const eliminateCourse = async () => {
-    console.log(course);
     const success = await deleteCourse(course?.id);
     if (!success) return false;
     return true;
@@ -68,15 +72,22 @@ const ManageCourses = () => {
 
   useEffect(() => {
     const initialStudents = async () => {
-      const students = await getStudent();
-      if (students) {
-        setCourseStudents(students);
-      } else {
-        window.alert("No users");
+      if (!course?.id) return;
+
+      const studentIds = await getCourseStudents(course.id);
+      if (!studentIds || studentIds.length === 0) {
+        setCourseStudents([]);
+        return;
       }
+
+      const students = await Promise.all(
+        studentIds.map((id) => getStudent(id)),
+      );
+      setCourseStudents(students.filter(Boolean));
     };
+
     initialStudents();
-  }, []);
+  }, [course, isAddUsersOpen, removeModal, refresh]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -166,9 +177,17 @@ const ManageCourses = () => {
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h2>Current users:</h2>
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            {courseStudents?.map((u) => (
-              <button type="button" key={u.studentID} id={u.studentID}>
-                {u.firstName} {u.lastName}
+            {courseStudents?.map((student) => (
+              <button
+                type="button"
+                key={student.studentID}
+                id={student.studentID}
+                onClick={() => {
+                  setRemoveModal(true);
+                  setRemoveStudent(student);
+                }}
+              >
+                {student.firstName} {student.lastName}
               </button>
             ))}
           </div>
@@ -185,7 +204,7 @@ const ManageCourses = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "rbga(0,0,0,0.5)",
+            backgroundColor: "rgba(0,0,0,0.5)",
           }}
           onClick={() => setIsAddUsersOpen(false)}
         >
@@ -195,9 +214,36 @@ const ManageCourses = () => {
           >
             <AddUserCourse
               setIsAddUserOpen={setIsAddUsersOpen}
+              course={state?.course}
               onClose={() => setIsAddUsersOpen(false)}
+              setRefresh={setRefresh}
             />
           </div>
+        </div>
+      )}
+
+      {/* Remove modal: */}
+
+      {removeModal && (
+        <div>
+          <h3>
+            Do you want to remove user {removeStudet.firstName}{" "}
+            {removeStudet.lastName} from the course?
+          </h3>
+          <button
+            onClick={async () => {
+              setRemoveModal(false);
+            }}
+          >
+            Yes
+          </button>
+          <button
+            onClick={() => {
+              setRemoveModal(false);
+            }}
+          >
+            No
+          </button>
         </div>
       )}
     </div>

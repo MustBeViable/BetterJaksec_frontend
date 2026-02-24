@@ -1,24 +1,13 @@
 const fetchData = async (url, options = {}) => {
-  const token = localStorage.getItem("token");
-  const headers = {
-    ...(options.headers || {}),
-  };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const response = await fetch(url, {
-    ...options,
-    headers,
-  });
+  const response = await fetch(url, options);
 
   if (response.status === 204) return true;
 
   let data = null;
+
   try {
     data = await response.json();
-  } catch {
+  } catch (err) {
     data = null;
   }
 
@@ -28,4 +17,5 @@ const fetchData = async (url, options = {}) => {
 
   return data;
 };
-export {fetchData}
+
+export { fetchData };
