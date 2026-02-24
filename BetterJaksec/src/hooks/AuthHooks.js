@@ -1,5 +1,5 @@
 import { fetchData } from "../utils/fetchData";
-
+//.
 const useAuthentication = () => {
   const postLogin = async (inputs) => {
     return await fetchData("/api/auth/login", {
@@ -17,7 +17,7 @@ const useUser = () => {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No token found");
 
-    return await fetchData(`/api/auth/me/${token}`);
+    return await fetchData(`/api/auth/me`);
   };
 
   return { getUserByToken };

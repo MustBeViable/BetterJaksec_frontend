@@ -1,9 +1,31 @@
-import React from "react";
-import useStudentData from "../../hooks/UseStudentDataHook";
+import React, { useState, useEffect } from "react";
+import { useUser } from "../../hooks/AuthHooks";
+import useStudentHook from "../../hooks/StudentHooks";
 import AttendanceCircle from "../../components/AttendanceCircle";
-
+//.
 const AttendanceTrackingView = () => {
-  const student = useStudentData();
+  const { getUserByToken } = useUser();
+  const { getStudent } = useStudentHook();
+
+  const [student, setStudent] = useState(null);
+
+  useEffect(() => {
+    const fetchStudent = async () => {
+      try {
+        const data = await getUserByToken();
+
+        if (!data?.id) return;
+
+        const studentData = await getStudent(data.id);
+        setStudent(studentData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStudent();
+  }, []);
+
   if (!student) return <div>Loading...</div>;
 
   const totalLessons = student.attendance?.length || 0;
@@ -19,7 +41,6 @@ const AttendanceTrackingView = () => {
         gap: "60px",
       }}
     >
-      {/* Attendance list */}
       <div style={{ flex: 2 }}>
         <h2 style={{ marginBottom: "20px" }}>Attendance List</h2>
         <div
@@ -38,7 +59,9 @@ const AttendanceTrackingView = () => {
                 padding: "14px",
                 marginBottom: "12px",
                 borderRadius: "6px",
-                backgroundColor: item.present ? "#d4edda" : "#f8d7da",
+                backgroundColor: item.present
+                  ? "#d4edda"
+                  : "#f8d7da",
                 fontSize: "20px",
               }}
             >
@@ -49,8 +72,14 @@ const AttendanceTrackingView = () => {
         </div>
       </div>
 
-      {/* Attendance circle */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", flex: 1 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flex: 1,
+        }}
+      >
         <AttendanceCircle
           attended={attendedLessons}
           total={totalLessons}
