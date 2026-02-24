@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useLessonHook from "../../hooks/LessonHooks";
 import useCourseHook from "../../hooks/CourseHook";
+import { useNavigate } from "react-router-dom";
 
 const NewLesson = ({
   course,
@@ -15,6 +16,7 @@ const NewLesson = ({
   const [lessonName, setLessonName] = useState("");
   const [lessonDate, setLessonDate] = useState("");
 
+  const navigate = useNavigate();
   const { postLesson, putLesson, deleteLesson } = useLessonHook();
   const { putCourse } = useCourseHook();
 
@@ -156,19 +158,36 @@ const NewLesson = ({
       </button>
 
       {selectedLesson && (
-        <button
-          onClick={async () => {
-            const ok = await removeLesson();
-            if (!ok) {
-              window.alert("Deletion failed");
-              return;
-            }
-            setIsAddLessonOpen(false);
-            setSelectedLesson(null);
-          }}
-        >
-          Delete lesson
-        </button>
+        <div>
+          <button
+            onClick={async () => {
+              const ok = await removeLesson();
+              if (!ok) {
+                window.alert("Deletion failed");
+                return;
+              }
+              setIsAddLessonOpen(false);
+              setSelectedLesson(null);
+            }}
+          >
+            Delete lesson
+          </button>
+          <button
+            onClick={() => {
+              setIsAddLessonOpen(false);
+              setSelectedLesson(null);
+              navigate("/attendance_view", {
+                state: {
+                  lessonId: selectedLesson.lessonID,
+                  courseId: course.id,
+                  course: course,
+                },
+              });
+            }}
+          >
+            Start lesson tracking
+          </button>
+        </div>
       )}
     </div>
   );
