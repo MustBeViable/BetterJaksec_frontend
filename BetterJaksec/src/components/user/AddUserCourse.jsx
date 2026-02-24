@@ -113,7 +113,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
           />
 
           <select value={grade} onChange={(e) => setGrade(e.target.value)}>
-            {gradeOptions.map((opt) => (
+            {gradeOptions?.map((opt) => (
               <option key={opt} value={opt}>
                 {opt === "all" ? "All grade levels" : opt}
               </option>

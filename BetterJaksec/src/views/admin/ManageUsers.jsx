@@ -79,7 +79,7 @@ const ManageUsers = () => {
               gap: "12px",
             }}
           >
-            {filteredUserList.map((user) => {
+            {filteredUserList?.map((user) => {
               return (
                 <div
                   key={user.id}
