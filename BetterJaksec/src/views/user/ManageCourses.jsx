@@ -17,7 +17,7 @@ const ManageCourses = () => {
   const [courseTeachers, setCourseTeachers] = useState([]);
   const [courseLessons, setCourseLessons] = useState([]);
   const [isAddUsersOpen, setIsAddUsersOpen] = useState(false);
-  const { getCourseStudents } = useStudentCourse();
+  const { getCourseStudents, deleteStudentFromCourse } = useStudentCourse();
   const { getStudent } = useStudentHooks();
   const { postCourse, putCourse, deleteCourse } = useCourseHooks();
 
@@ -48,6 +48,12 @@ const ManageCourses = () => {
 
   const eliminateCourse = async () => {
     const success = await deleteCourse(course?.id);
+    if (!success) return false;
+    return true;
+  };
+
+  const eliminateStudent = async (studentId) => {
+    const success = await deleteStudentFromCourse(studentId, course?.id);
     if (!success) return false;
     return true;
   };
@@ -232,7 +238,12 @@ const ManageCourses = () => {
           </h3>
           <button
             onClick={async () => {
-              setRemoveModal(false);
+              const ok = await eliminateStudent(removeStudet.studentID);
+              if (!ok) window.alert("sum ting wong");
+              if (ok) {
+                setRemoveStudent(null);
+                setRemoveModal(false);
+              }
             }}
           >
             Yes
@@ -240,6 +251,7 @@ const ManageCourses = () => {
           <button
             onClick={() => {
               setRemoveModal(false);
+              setRemoveStudent(null);
             }}
           >
             No

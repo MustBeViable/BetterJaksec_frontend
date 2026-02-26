@@ -27,8 +27,15 @@ const useStudentCourse = () => {
     });
   };
 
+  const deleteStudentFromCourse = async (studentId, courseId) => {
+    return await fetchData(`${baseUrl}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ studentId, courseId }),
+    })
+  }
 
-  return { createGrade, getGrade, getCourseStudents, putGrade };
+  return { createGrade, getGrade, getCourseStudents, putGrade, deleteStudentFromCourse };
 };
 
 export default useStudentCourse;
