@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import useLessonHook from "../../hooks/LessonHooks";
-import useCourseHook from "../../hooks/CourseHook";
 import { useNavigate } from "react-router-dom";
 
 const NewLesson = ({
@@ -18,7 +17,6 @@ const NewLesson = ({
 
   const navigate = useNavigate();
   const { postLesson, putLesson, deleteLesson } = useLessonHook();
-  const { putCourse } = useCourseHook();
 
   useEffect(() => {
     const initComponent = () => {
@@ -41,14 +39,6 @@ const NewLesson = ({
     if (!success) return false;
 
     const newIds = (course?.lessonIds ?? []).filter((x) => x !== id);
-
-    const lessonToCourse = {
-      courseID: course.id,
-      lessonIDs: newIds,
-    };
-
-    const successSync = await putCourse(lessonToCourse);
-    if (!successSync) return false;
 
     setCourse((prev) => ({ ...prev, lessonIds: newIds }));
     onDeleted?.(id);
@@ -91,14 +81,6 @@ const NewLesson = ({
     const createdId = createdLesson.id ?? createdLesson.lessonID;
 
     const lessonList = [...(course.lessonIds ?? []), createdId];
-
-    const lessonToCourse = {
-      courseID: course.id,
-      lessonIDs: lessonList,
-    };
-
-    const successSync = await putCourse(lessonToCourse);
-    if (!successSync) return false;
 
     setCourse((prev) => ({ ...prev, lessonIds: lessonList }));
     onCreated?.(createdId);

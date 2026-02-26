@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddUserCourse from "../../components/user/AddUserCourse";
 import useStudentHooks from "../../hooks/StudentHooks";
 import useCourseHooks from "../../hooks/CourseHook";
 import useStudentCourse from "../../hooks/StudentCourseHook";
+import { UserContext } from "../../contexts/UserContext";
 
 const ManageCourses = () => {
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const { state } = useLocation();
   const [refresh, setRefresh] = useState(false);
@@ -17,15 +19,16 @@ const ManageCourses = () => {
   const [courseTeachers, setCourseTeachers] = useState([]);
   const [courseLessons, setCourseLessons] = useState([]);
   const [isAddUsersOpen, setIsAddUsersOpen] = useState(false);
-  const { getCourseStudents } = useStudentCourse();
+  const { getCourseStudents, deleteStudentFromCourse } = useStudentCourse();
   const { getStudent } = useStudentHooks();
   const { postCourse, putCourse, deleteCourse } = useCourseHooks();
 
   const createCourse = async () => {
     const newCourse = {
       courseName: courseName,
-      teacherIDs: courseTeachers,
+      teacherId: user?.id,
     };
+    console.log(newCourse);
     const success = await postCourse(newCourse);
     if (!success) return false;
     return true;
@@ -38,8 +41,8 @@ const ManageCourses = () => {
     const updatedCourse = {};
     updatedCourse.courseID = course.id;
     if (courseName !== null) updatedCourse.courseName = courseName;
-    if (courseLessons.length > 0) updatedCourse.lessonIDs = courseLessons;
-    if (courseTeachers.length > 0) updatedCourse.teacherIDs = courseTeachers;
+    if (courseLessons.length > 0) updatedCourse.lessonIds = courseLessons;
+    if (courseTeachers.length > 0) updatedCourse.teacherIds = courseTeachers;
 
     const success = await putCourse(updatedCourse);
     if (!success) return false;
@@ -48,6 +51,12 @@ const ManageCourses = () => {
 
   const eliminateCourse = async () => {
     const success = await deleteCourse(course?.id);
+    if (!success) return false;
+    return true;
+  };
+
+  const eliminateStudent = async (studentId) => {
+    const success = await deleteStudentFromCourse(studentId, course?.id);
     if (!success) return false;
     return true;
   };
@@ -232,7 +241,12 @@ const ManageCourses = () => {
           </h3>
           <button
             onClick={async () => {
-              setRemoveModal(false);
+              const ok = await eliminateStudent(removeStudet.studentID);
+              if (!ok) window.alert("sum ting wong");
+              if (ok) {
+                setRemoveStudent(null);
+                setRemoveModal(false);
+              }
             }}
           >
             Yes
@@ -240,6 +254,7 @@ const ManageCourses = () => {
           <button
             onClick={() => {
               setRemoveModal(false);
+              setRemoveStudent(null);
             }}
           >
             No
