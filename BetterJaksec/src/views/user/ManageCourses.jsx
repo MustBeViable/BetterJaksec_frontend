@@ -26,7 +26,10 @@ const ManageCourses = () => {
   const createCourse = async () => {
     const newCourse = {
       courseName: courseName,
+      lessonIds: [],
+      assignmentIds: [],
       teacherId: user?.id,
+      teacherIds: [user?.id],
     };
     console.log(newCourse);
     const success = await postCourse(newCourse);

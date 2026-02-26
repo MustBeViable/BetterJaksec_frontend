@@ -10,6 +10,7 @@ const useCourseHook = () => {
    */
 
   const postCourse = async (course) => {
+    console.log(course);
     const body = {
       courseName: course.courseName,
       lessonIds: course.lessonIds ?? [],
