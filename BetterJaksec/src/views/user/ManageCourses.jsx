@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AddUserCourse from "../../components/user/AddUserCourse";
 import useStudentHooks from "../../hooks/StudentHooks";
 import useCourseHooks from "../../hooks/CourseHook";
 import useStudentCourse from "../../hooks/StudentCourseHook";
+import { UserContext } from "../../contexts/UserContext";
 
 const ManageCourses = () => {
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const { state } = useLocation();
   const [refresh, setRefresh] = useState(false);
@@ -24,8 +26,9 @@ const ManageCourses = () => {
   const createCourse = async () => {
     const newCourse = {
       courseName: courseName,
-      teacherIDs: courseTeachers,
+      teacherId: user?.id,
     };
+    console.log(newCourse);
     const success = await postCourse(newCourse);
     if (!success) return false;
     return true;
@@ -38,8 +41,8 @@ const ManageCourses = () => {
     const updatedCourse = {};
     updatedCourse.courseID = course.id;
     if (courseName !== null) updatedCourse.courseName = courseName;
-    if (courseLessons.length > 0) updatedCourse.lessonIDs = courseLessons;
-    if (courseTeachers.length > 0) updatedCourse.teacherIDs = courseTeachers;
+    if (courseLessons.length > 0) updatedCourse.lessonIds = courseLessons;
+    if (courseTeachers.length > 0) updatedCourse.teacherIds = courseTeachers;
 
     const success = await putCourse(updatedCourse);
     if (!success) return false;
