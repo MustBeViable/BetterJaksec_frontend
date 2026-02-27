@@ -15,6 +15,9 @@ const NewLesson = ({
   const [lessonName, setLessonName] = useState("");
   const [lessonDate, setLessonDate] = useState("");
 
+  const [nameError, setNameError] = useState("");
+  const [dateError, setDateError] = useState("");
+
   const navigate = useNavigate();
   const { postLesson, putLesson, deleteLesson } = useLessonHook();
 
@@ -23,10 +26,14 @@ const NewLesson = ({
       if (!selectedLesson) {
         setLessonName("");
         setLessonDate("");
+        setNameError("");
+        setDateError("");
         return;
       }
       setLessonName(selectedLesson.lessonName ?? selectedLesson.name ?? "");
       setLessonDate(selectedLesson.lessonDate ?? selectedLesson.date ?? "");
+      setNameError("");
+      setDateError("");
     };
     initComponent();
   }, [selectedLesson]);
@@ -103,8 +110,14 @@ const NewLesson = ({
         <input
           type="text"
           value={lessonName}
-          onChange={(e) => setLessonName(e.target.value)}
+          onChange={(e) => {
+            setLessonName(e.target.value);
+            if (nameError) setNameError("");
+          }}
         />
+        {nameError && (
+          <span style={{ color: "red", marginLeft: "8px" }}>{nameError}</span>
+        )}
       </label>
 
       <label>
@@ -112,12 +125,26 @@ const NewLesson = ({
         <input
           type="date"
           value={lessonDate}
-          onChange={(e) => setLessonDate(e.target.value)}
+          onChange={(e) => {
+            setLessonDate(e.target.value);
+            if (dateError) setDateError("");
+          }}
         />
+        {dateError && (
+          <span style={{ color: "red", marginLeft: "8px" }}>{dateError}</span>
+        )}
       </label>
 
       <button
         onClick={async () => {
+          const nameOk = lessonName.trim().length > 0;
+          const dateOk = lessonDate.trim().length > 0;
+
+          setNameError(nameOk ? "" : "Required");
+          setDateError(dateOk ? "" : "Required");
+
+          if (!nameOk || !dateOk) return;
+
           const ok = await newLesson();
           if (!ok) {
             window.alert("Request failed");

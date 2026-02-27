@@ -4,7 +4,7 @@ import "./styles/App.css";
 import MainScreen from "./views/user/MainScreen";
 import LogIn from "./views/LogIn";
 import ProfilePage from "./views/user/ProfilePage";
-import ChangePasswordPage from "./views/user/ChangePassword"; 
+import ChangePasswordPage from "./views/user/ChangePassword";
 import AttendanceView from "./views/user/AttendanceView";
 import AttendanceTrackingView from "./views/user/AttendanceTrackingView";
 import MainScreenAdmin from "./views/admin/MainScreenAdmin";
@@ -16,41 +16,45 @@ import CoursesView from "./views/user/CoursesView";
 import ManageCourses from "./views/user/ManageCourses";
 import ManageLessons from "./views/user/ManageLessons";
 import { UserProvider } from "./contexts/UserContext.jsx";
+import { AdminProvider } from "./contexts/AdminContext.jsx";
 
 function App() {
   return (
     <BrowserRouter>
       <UserProvider>
-        <Routes>
-          {/* Public / user routes */}
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/" element={<MainScreen />} />
-          <Route path="/profile_page" element={<ProfilePage />} />
-          <Route path="/change-password" element={<ChangePasswordPage />} /> 
-          <Route path="/attendance_view" element={<AttendanceView />} />
-          <Route
-            path="/attendance_tracking"
-            element={<AttendanceTrackingView />}
-          />
-          <Route path="/courses" element={<CoursesView />} />
-          <Route path="/courses/manage" element={<ManageCourses />} />
-          <Route
-            path="/courses/manage/manage_lessons"
-            element={<ManageLessons />}
-          />
+        <AdminProvider>
+          <Routes>
+            {/* Public / user routes */}
+            <Route path="/login" element={<LogIn />} />
+            <Route path="/" element={<MainScreen />} />
+            <Route path="/profile_page" element={<ProfilePage />} />
+            <Route path="/change-password" element={<ChangePasswordPage />} />
+            <Route path="/attendance_view" element={<AttendanceView />} />
+            <Route
+              path="/attendance_tracking"
+              element={<AttendanceTrackingView />}
+            />
+            <Route path="/courses" element={<CoursesView />} />
+            <Route path="/courses/manage" element={<ManageCourses />} />
+            <Route
+              path="/courses/manage/manage_lessons"
+              element={<ManageLessons />}
+            />
 
-          {/* Admin routing */}
-          <Route path="/admin" element={<AdminView />}>
-            <Route index element={<MainScreenAdmin />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="users" element={<ManageUsers />} />
-            <Route path="new_user" element={<NewUser />} />
-          </Route>
-          <Route
-            path="/admin_attendance_tracking"
-            element={<AdminAttendanceTrackingView />}
-          />
-        </Routes>
+            {/* Admin routing */}
+
+            <Route path="/admin" element={<AdminView />}>
+              <Route index element={<MainScreenAdmin />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="users" element={<ManageUsers />} />
+              <Route path="new_user" element={<NewUser />} />
+            </Route>
+            <Route
+              path="/admin_attendance_tracking"
+              element={<AdminAttendanceTrackingView />}
+            />
+          </Routes>
+        </AdminProvider>
       </UserProvider>
     </BrowserRouter>
   );

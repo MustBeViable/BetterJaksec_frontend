@@ -12,6 +12,11 @@ const NewUser = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("teacher");
+
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+
   const { postStudent } = useStudentHook();
   const { postTeacher } = useTeacherHook();
   const { checkEmail } = useEmailHook();
@@ -27,7 +32,7 @@ const NewUser = () => {
         emailAvailable = await checkEmail(newEmail);
         if (emailAvailable.isAvailable) {
           setEmail(newEmail);
-          setNewEmailChange(!setNewEmailChange);
+          setNewEmailChange((prev) => !prev);
           window.alert(`User new email: ${newEmail}`);
           return;
         }
@@ -54,6 +59,17 @@ const NewUser = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    const firstOk = firstName.trim().length > 0;
+    const lastOk = lastName.trim().length > 0;
+    const emailOk = email.trim().length > 0;
+
+    setFirstNameError(firstOk ? "" : "Required");
+    setLastNameError(lastOk ? "" : "Required");
+    setEmailError(emailOk ? "" : "Required");
+
+    if (!firstOk || !lastOk || !emailOk) return;
+
     const ok = await handlePost();
     if (ok) navigate("/admin/users");
   };
@@ -84,8 +100,15 @@ const NewUser = () => {
             value={firstName}
             onChange={(evt) => {
               setFirstName(evt.target.value);
+              if (firstNameError) setFirstNameError("");
             }}
           />
+          {firstNameError && (
+            <span style={{ color: "red", marginLeft: "8px" }}>
+              {firstNameError}
+            </span>
+          )}
+
           <label htmlFor="newUserLastName">Last name: </label>
           <input
             type="text"
@@ -93,8 +116,15 @@ const NewUser = () => {
             value={lastName}
             onChange={(evt) => {
               setLastName(evt.target.value);
+              if (lastNameError) setLastNameError("");
             }}
           />
+          {lastNameError && (
+            <span style={{ color: "red", marginLeft: "8px" }}>
+              {lastNameError}
+            </span>
+          )}
+
           <label htmlFor="role">Select role: </label>
           <select
             name="role"
@@ -106,6 +136,7 @@ const NewUser = () => {
             <option value="student">Student</option>
             <option value="admin">Admin</option>
           </select>
+
           <label htmlFor="newUserEmail">Generated email: </label>
           <input
             type="email"
@@ -113,9 +144,16 @@ const NewUser = () => {
             value={email}
             onChange={(evt) => {
               setEmail(evt.target.value);
+              if (emailError) setEmailError("");
             }}
           />
+          {emailError && (
+            <span style={{ color: "red", marginLeft: "8px" }}>
+              {emailError}
+            </span>
+          )}
         </div>
+
         <button type="submit">Add user</button>
         <button
           onClick={() => {

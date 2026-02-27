@@ -1,15 +1,20 @@
 import { fetchData } from "../utils/fetchData";
 //.
 const useAuthentication = () => {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL + "/auth";
   const postLogin = async (inputs) => {
-    return await fetchData("/api/auth/login", {
+    return await fetchData(`${baseUrl}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(inputs),
     });
   };
 
-  return { postLogin };
+  const getRole = async () => {
+    return await fetchData(`${baseUrl}/me`);
+  }
+
+  return { postLogin, getRole };
 };
 
 const useUser = () => {

@@ -19,6 +19,9 @@ const ManageCourses = () => {
   const [courseTeachers, setCourseTeachers] = useState([]);
   const [courseLessons, setCourseLessons] = useState([]);
   const [isAddUsersOpen, setIsAddUsersOpen] = useState(false);
+
+  const [courseNameError, setCourseNameError] = useState("");
+
   const { getCourseStudents, deleteStudentFromCourse } = useStudentCourse();
   const { getStudent } = useStudentHooks();
   const { postCourse, putCourse, deleteCourse } = useCourseHooks();
@@ -26,7 +29,10 @@ const ManageCourses = () => {
   const createCourse = async () => {
     const newCourse = {
       courseName: courseName,
+      lessonIds: [],
+      assignmentIds: [],
       teacherId: user?.id,
+      teacherIds: [user?.id],
     };
     console.log(newCourse);
     const success = await postCourse(newCourse);
@@ -75,6 +81,7 @@ const ManageCourses = () => {
       setCourseName(course.courseName ?? course.name ?? "");
       setCourseTeachers(course.teacherIds ?? []);
       setCourseLessons(course.lessonIds ?? []);
+      setCourseNameError("");
     };
     initCourseInfo();
   }, [course]);
@@ -122,15 +129,24 @@ const ManageCourses = () => {
               id="courseName"
               type="text"
               value={courseName}
-              onChange={(e) => setCourseName(e.target.value)}
+              onChange={(e) => {
+                setCourseName(e.target.value);
+                if (courseNameError) setCourseNameError("");
+              }}
             />
+            {courseNameError && (
+              <span style={{ color: "red", marginLeft: "8px" }}>
+                {courseNameError}
+              </span>
+            )}
           </div>
 
-          <button type="button" onClick={() => setIsAddUsersOpen(true)}>
-            Add users to the course
-          </button>
           {course && (
             <>
+              <button type="button" onClick={() => setIsAddUsersOpen(true)}>
+                Add users to the course
+              </button>
+
               <button
                 type="button"
                 onClick={() => {
@@ -141,10 +157,15 @@ const ManageCourses = () => {
               >
                 Manage lessons
               </button>
+
               <button
                 type="button"
-                onClick={() => {
-                  const ok = updateCourse();
+                onClick={async () => {
+                  const nameOk = courseName.trim().length > 0;
+                  setCourseNameError(nameOk ? "" : "Required");
+                  if (!nameOk) return;
+
+                  const ok = await updateCourse();
                   if (!ok) window.alert("Update failed");
                   else {
                     navigate("/courses");
@@ -153,10 +174,11 @@ const ManageCourses = () => {
               >
                 Update course
               </button>
+
               <button
                 type="button"
-                onClick={() => {
-                  const ok = eliminateCourse();
+                onClick={async () => {
+                  const ok = await eliminateCourse();
                   if (!ok) window.alert("Deletion failed");
                   else {
                     navigate("/courses");
@@ -167,11 +189,16 @@ const ManageCourses = () => {
               </button>
             </>
           )}
+
           {!course && (
             <button
               type="button"
-              onClick={() => {
-                const ok = createCourse();
+              onClick={async () => {
+                const nameOk = courseName.trim().length > 0;
+                setCourseNameError(nameOk ? "" : "Required");
+                if (!nameOk) return;
+
+                const ok = await createCourse();
                 if (!ok) window.alert("Creation failed");
                 else {
                   navigate("/courses");
