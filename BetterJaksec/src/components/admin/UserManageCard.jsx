@@ -11,7 +11,6 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
     const roleInit = () => {
       if (!user.teacherID) return;
       setRole(user.admin ? "admin" : "teacher");
-      console.log(user);
     };
     roleInit();
   }, [user.teacherID, user.isAdmin]);
