@@ -82,7 +82,7 @@ const ManageUsers = () => {
             {filteredUserList?.map((user) => {
               return (
                 <div
-                  key={user.id}
+                  key={user.firstName + user.id}
                   style={{
                     borderRadius: 10,
                     backgroundColor: "yellow",
