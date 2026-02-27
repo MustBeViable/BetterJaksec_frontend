@@ -41,8 +41,6 @@ const ManageCourses = () => {
   };
 
   const updateCourse = async () => {
-    //Jos tätä checkiä ei oo vite app kaatuu kun sitä ei ole (esim uusi kurssi tms)
-    // DO NOT DELETE THIS CHECK!!
     if (!course?.id) return;
     const updatedCourse = {};
     updatedCourse.courseID = course.id;
@@ -106,10 +104,11 @@ const ManageCourses = () => {
   }, [course, isAddUsersOpen, removeModal, refresh]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div className="main-card inner-card--stack">
+      <div className="inner-card inner-card--row">
         <h1>{course?.name ? course.name : "New course:"}</h1>
         <button
+          className="btn"
           type="button"
           onClick={() => {
             navigate("/courses", {
@@ -121,9 +120,9 @@ const ManageCourses = () => {
         </button>
       </div>
 
-      <div style={{ display: "flex" }}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div>
+      <div className="inner-card inner-card--row">
+        <div className="inner-card inner-card--stack">
+          <div className="inner-card inner-card--stack">
             <label htmlFor="courseName">Course name:</label>
             <input
               id="courseName"
@@ -134,20 +133,17 @@ const ManageCourses = () => {
                 if (courseNameError) setCourseNameError("");
               }}
             />
-            {courseNameError && (
-              <span style={{ color: "red", marginLeft: "8px" }}>
-                {courseNameError}
-              </span>
-            )}
+            {courseNameError && <p style={{ color: "var(--danger)" }}>{courseNameError}</p>}
           </div>
 
           {course && (
             <>
-              <button type="button" onClick={() => setIsAddUsersOpen(true)}>
+              <button className="btn" type="button" onClick={() => setIsAddUsersOpen(true)}>
                 Add users to the course
               </button>
 
               <button
+                className="btn"
                 type="button"
                 onClick={() => {
                   navigate("/courses/manage/manage_lessons", {
@@ -159,6 +155,7 @@ const ManageCourses = () => {
               </button>
 
               <button
+                className="btn btn--primary"
                 type="button"
                 onClick={async () => {
                   const nameOk = courseName.trim().length > 0;
@@ -176,6 +173,7 @@ const ManageCourses = () => {
               </button>
 
               <button
+                className="btn btn--danger"
                 type="button"
                 onClick={async () => {
                   const ok = await eliminateCourse();
@@ -192,6 +190,7 @@ const ManageCourses = () => {
 
           {!course && (
             <button
+              className="btn btn--primary"
               type="button"
               onClick={async () => {
                 const nameOk = courseName.trim().length > 0;
@@ -210,11 +209,12 @@ const ManageCourses = () => {
           )}
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="inner-card inner-card--stack">
           <h2>Current users:</h2>
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div className="inner-card inner-card--wrap">
             {courseStudents?.map((student) => (
               <button
+                className="btn"
                 type="button"
                 key={student.studentID}
                 id={student.studentID}
@@ -230,10 +230,9 @@ const ManageCourses = () => {
         </div>
       </div>
 
-      {/* Add new user modal: */}
-
       {isAddUsersOpen && (
         <div
+          className="inner-card"
           style={{
             position: "fixed",
             inset: 0,
@@ -245,7 +244,7 @@ const ManageCourses = () => {
           onClick={() => setIsAddUsersOpen(false)}
         >
           <div
-            style={{ background: "#fff", padding: "16px" }}
+            className="inner-card"
             onClick={(e) => e.stopPropagation()}
           >
             <AddUserCourse
@@ -258,34 +257,36 @@ const ManageCourses = () => {
         </div>
       )}
 
-      {/* Remove modal: */}
-
       {removeModal && (
-        <div>
+        <div className="inner-card inner-card--stack">
           <h3>
             Do you want to remove user {removeStudet.firstName}{" "}
             {removeStudet.lastName} from the course?
           </h3>
-          <button
-            onClick={async () => {
-              const ok = await eliminateStudent(removeStudet.studentID);
-              if (!ok) window.alert("sum ting wong");
-              if (ok) {
-                setRemoveStudent(null);
+          <div className="inner-card inner-card--row">
+            <button
+              className="btn btn--danger"
+              onClick={async () => {
+                const ok = await eliminateStudent(removeStudet.studentID);
+                if (!ok) window.alert("sum ting wong");
+                if (ok) {
+                  setRemoveStudent(null);
+                  setRemoveModal(false);
+                }
+              }}
+            >
+              Yes
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
                 setRemoveModal(false);
-              }
-            }}
-          >
-            Yes
-          </button>
-          <button
-            onClick={() => {
-              setRemoveModal(false);
-              setRemoveStudent(null);
-            }}
-          >
-            No
-          </button>
+                setRemoveStudent(null);
+              }}
+            >
+              No
+            </button>
+          </div>
         </div>
       )}
     </div>

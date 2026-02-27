@@ -1,9 +1,16 @@
-import React from 'react'
+import React from "react";
 
-const UserManageButtonAdmin = ({user, setSelectedUser}) => {
+const UserManageButtonAdmin = ({ user, setSelectedUser }) => {
   return (
-    <button onClick={() => {setSelectedUser(user)}}>{user.firstName} {user.lastName}</button>
-  )
-}
+    <button
+      className="btn"
+      onClick={() => {
+        setSelectedUser(user);
+      }}
+    >
+      {user.firstName} {user.lastName}
+    </button>
+  );
+};
 
-export default UserManageButtonAdmin
+export default UserManageButtonAdmin;

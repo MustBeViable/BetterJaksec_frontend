@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import CourseList from "../../components/CourseList";
 import ClassAttendanceStatsAdmin from "../../components/admin/ClassAttendanceStatsAdmin";
 import useCourseHook from "../../hooks/CourseHook";
-//.
 
 const AdminAttendanceTrackingView = () => {
   const { getCourse } = useCourseHook();
@@ -16,7 +15,6 @@ const AdminAttendanceTrackingView = () => {
       try {
         const hookData = await getCourse();
         console.log(hookData);
-
         setCourses(hookData || []);
       } catch (error) {
         console.error("Failed to fetch courses:", error);
@@ -38,28 +36,16 @@ const AdminAttendanceTrackingView = () => {
   if (loading) return <div>Loading courses...</div>;
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: "300px",
-        height: "300px",
-        justifyContent: "space-between",
-      }}
-    >
-      {/* Top row */}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        {/* Courses top-left */}
+    <div className="main-card inner-card--stack">
+      <div className="inner-card inner-card--row">
         <CourseList courses={courses} />
 
-        {/* Navbar top-right */}
-        <div>
-          <Link to="/">Main</Link>
-          <Link to="">Return</Link>
+        <div className="inner-card inner-card--row">
+          <Link className="btn" to="/">Main</Link>
+          <Link className="btn" to="">Return</Link>
         </div>
       </div>
 
-      {/* Bottom row: attendance stats */}
       <ClassAttendanceStatsAdmin students={Users} totalClasses={20} />
     </div>
   );

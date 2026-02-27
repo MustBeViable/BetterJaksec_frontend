@@ -10,13 +10,6 @@ const AttendanceView = () => {
 
   const [absentStudent, setAbsentStudent] = useState([]);
   const [presentStudent, setPresentStudent] = useState([]);
-  /**
-   * lessonInfo: {
-      lessonId: lessonId,
-      courseId: 2,
-      course: {id: 6, name: 'jessus kurssi2233', lessonIds: Array(3), assignmentIds: Array(0), teacherNames: Array(0)},
-    }
-   */
   const [lessonInfo, setLessonInfo] = useState({});
 
   const { getCourseStudents } = useStudentCourse();
@@ -100,18 +93,21 @@ const AttendanceView = () => {
   }, []);
 
   return (
-    <>
+    <div className="main-card inner-card--stack">
       <h1>
         {lessonInfo?.course?.name
           ? lessonInfo?.course?.name
           : "Placeholder name"}
       </h1>
+
       <img src="/images/qr_code.svg" alt="" />
-      <div style={{ display: "flex", flexDirection: "column" }}>
+
+      <div className="inner-card inner-card--stack">
         <h2>Present student:</h2>
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+        <div className="inner-card inner-card--wrap">
           {presentStudent.map((student) => (
             <button
+              className="btn"
               key={student.studentID}
               id={student.studentID}
               onClick={() => {
@@ -123,11 +119,13 @@ const AttendanceView = () => {
           ))}
         </div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+
+      <div className="inner-card inner-card--stack">
         <h2>Current users:</h2>
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+        <div className="inner-card inner-card--wrap">
           {absentStudent.map((student) => (
             <button
+              className="btn"
               key={student.studentID}
               id={student.studentID}
               onClick={() => {
@@ -139,7 +137,9 @@ const AttendanceView = () => {
           ))}
         </div>
       </div>
+
       <button
+        className="btn btn--primary"
         onClick={async () => {
           const ok = await handlePostAttendances();
           if (!ok) return;
@@ -152,7 +152,7 @@ const AttendanceView = () => {
       >
         Stop attendance marking
       </button>
-    </>
+    </div>
   );
 };
 

@@ -93,18 +93,11 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
   }, []);
 
   return (
-    <div style={{ padding: "24px" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          backgroundColor: "#000000",
-        }}
-      >
+    <div className="main-card">
+      <div className="inner-card inner-card--stack">
         <h2>Search users:</h2>
 
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        <div className="inner-card inner-card--row">
           <input
             type="text"
             value={search}
@@ -121,14 +114,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
           </select>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "10px",
-            alignContent: "flex-start",
-          }}
-        >
+        <div className="inner-card inner-card--wrap">
           {visibleStudentList?.map((s) => {
             const isSelected = selectedIds.has(s.studentID);
             return (
@@ -137,10 +123,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
                 id={String(s.studentID)}
                 type="button"
                 onClick={() => toggleStudent(s.studentID)}
-                style={{
-                  background: isSelected ? "#7bdc9a" : "#e0e0e0",
-                  color: "#030000",
-                }}
+                className={isSelected ? "btn btn--primary" : "btn"}
               >
                 {s.firstName} {s.lastName}
               </button>
@@ -148,6 +131,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
           })}
           <p>{loading}</p>
           <button
+            className="btn btn--primary"
             onClick={async () => {
               setSubmit(true);
               const ok = await handleStudentUpdate();
@@ -164,6 +148,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
             Save
           </button>
           <button
+            className="btn"
             onClick={() => {
               setIsAddUserOpen(false);
             }}

@@ -76,23 +76,20 @@ const NewUser = () => {
 
   useEffect(() => {
     const generateEmail = () => {
-      if (firstName.trim() === "") {
-        return;
-      }
-      if (lastName.trim() === "") {
-        return;
-      }
-      let email = `${firstName}.${lastName}@${schoolEmail}`;
-      setEmail(email);
+      if (firstName.trim() === "") return;
+      if (lastName.trim() === "") return;
+      const nextEmail = `${firstName}.${lastName}@${schoolEmail}`;
+      setEmail(nextEmail);
     };
     generateEmail();
   }, [firstName, lastName, newEmailChange]);
 
   return (
-    <div>
+    <div className="main-card">
       <h1>New user</h1>
-      <form onSubmit={onSubmit}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+
+      <form onSubmit={onSubmit} className="inner-card inner-card--stack">
+        <div className="inner-card inner-card--stack">
           <label htmlFor="newUserFirstName">First name: </label>
           <input
             type="text"
@@ -104,9 +101,7 @@ const NewUser = () => {
             }}
           />
           {firstNameError && (
-            <span style={{ color: "red", marginLeft: "8px" }}>
-              {firstNameError}
-            </span>
+            <p style={{ color: "var(--danger)" }}>{firstNameError}</p>
           )}
 
           <label htmlFor="newUserLastName">Last name: </label>
@@ -120,9 +115,7 @@ const NewUser = () => {
             }}
           />
           {lastNameError && (
-            <span style={{ color: "red", marginLeft: "8px" }}>
-              {lastNameError}
-            </span>
+            <p style={{ color: "var(--danger)" }}>{lastNameError}</p>
           )}
 
           <label htmlFor="role">Select role: </label>
@@ -147,21 +140,21 @@ const NewUser = () => {
               if (emailError) setEmailError("");
             }}
           />
-          {emailError && (
-            <span style={{ color: "red", marginLeft: "8px" }}>
-              {emailError}
-            </span>
-          )}
+          {emailError && <p style={{ color: "var(--danger)" }}>{emailError}</p>}
         </div>
 
-        <button type="submit">Add user</button>
-        <button
-          onClick={() => {
-            navigate("/admin/users");
-          }}
-        >
-          Return
-        </button>
+        <div className="inner-card inner-card--row">
+          <button className="btn btn--primary" type="submit">
+            Add user
+          </button>
+          <button
+            className="btn"
+            type="button"
+            onClick={() => navigate("/admin/users")}
+          >
+            Return
+          </button>
+        </div>
       </form>
     </div>
   );

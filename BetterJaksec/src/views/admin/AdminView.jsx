@@ -7,24 +7,35 @@ const AdminView = () => {
   const { handleLogout } = useContext(UserContext);
   const { checkPermission } = useContext(AdminContext);
 
-  
   useEffect(() => {
     const init = () => {
       checkPermission();
-    }
-    init()
-  }, [])
+    };
+    init();
+  }, []);
   return (
-    <>
-    {/* Joko oma profiili adminille tai sit näin miten nyt reitittää */}
-      <nav style={{margin: "10px"}}>
-        <Link to="/admin" style={{margin: "10px"}}>Main</Link>
-        <Link to="/admin/profile" style={{margin: "10px"}}>Profile</Link>
-        <Link to="/admin/users" style={{margin: "10px"}}>Manage users</Link>
-        <button style={{margin: "10px"}} onClick={()=> {handleLogout()}}>Log out</button>
+    <div className="main-card">
+      <nav className="inner-card inner-card--wrap">
+        <Link className="btn" to="/admin">
+          Main
+        </Link>
+        <Link className="btn" to="/admin/profile">
+          Profile
+        </Link>
+        <Link className="btn" to="/admin/users">
+          Manage users
+        </Link>
+        <button
+          className="btn btn--danger"
+          onClick={() => {
+            handleLogout();
+          }}
+        >
+          Log out
+        </button>
       </nav>
       <Outlet />
-    </>
+    </div>
   );
 };
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/AuthHooks";
-//.
 
 const ProfilePage = () => {
   const { getUserByToken } = useUser();
@@ -26,30 +25,12 @@ const ProfilePage = () => {
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: "40px",
-          marginLeft: "40px",
-          marginRight: "40px",
-        }}
-      >
-        {/* LEFT: profile info */}
-        <div
-          style={{
-            color: "#070202",
-            display: "flex",
-            flexDirection: "column",
-            fontSize: "1.6rem",
-            paddingRight: "200px",
-            paddingBottom: "200px",
-          }}
-        >
+      <div className="inner-card inner-card--stack">
+        <div className="inner-card inner-card--stack">
           <h2>Profile</h2>
           {(user?.role === "student" || user?.role === "teacher") && (
             <button
+              className="btn"
               onClick={() => {
                 navigate("/");
               }}
@@ -57,24 +38,14 @@ const ProfilePage = () => {
               Return
             </button>
           )}
-          <div
-            style={{
-              background: "#f5f5f5",
-              padding: "15px",
-              borderRadius: "6px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-              paddingBottom: "20px",
-            }}
-          >
-            <div>Email: {user.email}</div>
-            <div>Name: {user.firstName}</div>
-            <div>Last Name: {user.lastName}</div>
+          <div className="inner-card inner-card--stack">
+            <p>Email: {user.email}</p>
+            <p>Name: {user.firstName}</p>
+            <p>Last Name: {user.lastName}</p>
           </div>
 
           <button
-            style={{ marginTop: "20px" }}
+            className="btn btn--primary"
             onClick={() => navigate("/change-password")}
           >
             Change password

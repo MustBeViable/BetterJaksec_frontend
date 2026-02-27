@@ -8,11 +8,11 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
   const { putTeacher, deleteTeacher } = useTeacherHook();
 
   useEffect(() => {
-    const roleInit = () => {
+    const init = () => {
       if (!user.teacherID) return;
-      setRole(user.admin ? "admin" : "teacher");
+      setRole(user.isAdmin ? "admin" : "teacher");
     };
-    roleInit();
+    init();
   }, [user.teacherID, user.isAdmin]);
 
   const modifyUserRole = async () => {
@@ -26,46 +26,38 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
   };
 
   const deleteUser = async () => {
-    if (user.teacherID) {
-      const success = deleteTeacher(user.teacherID);
-      if (!success) return false;
-      return true;
-    }
-    if (user.studentID) {
-      const success = deleteStudent(user.studentID);
-      if (!success) return false;
-      return true;
-    }
+    if (user.teacherID) return deleteTeacher(user.teacherID);
+    if (user.studentID) return deleteStudent(user.studentID);
     window.alert("not a student or teacher");
     return false;
   };
 
   return (
-    <div>
+    <div className="inner-card inner-card--stack">
       <h1>UserManageCard</h1>
 
-      <table>
-        <thead>
-          <tr>
-            <th>User info</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>ID:</td>
-            <td>{user.studentID ?? user.teacherID}</td>
-          </tr>
-          <tr>
-            <td>Name: </td>
-            <td>
-              {user.firstName} {user.lastName}
-            </td>
-          </tr>
+      <div className="inner-card">
+        <table>
+          <thead>
+            <tr>
+              <th>User info</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ID:</td>
+              <td>{user.studentID ?? user.teacherID}</td>
+            </tr>
+            <tr>
+              <td>Name:</td>
+              <td>
+                {user.firstName} {user.lastName}
+              </td>
+            </tr>
 
-          {user.teacherID && (
-            <>
+            {user.teacherID && (
               <tr>
-                <td>Change role: </td>
+                <td>Change role:</td>
                 <td>
                   <select
                     id="role-select"
@@ -77,22 +69,25 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
                   </select>
                 </td>
               </tr>
-            </>
-          )}
+            )}
 
-          {user.studentID && (
-            <tr>
-              <td>Role: </td>
-              <td>Student</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            {user.studentID && (
+              <tr>
+                <td>Role:</td>
+                <td>Student</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      <div style={{ display: "flex", margin: "10px" }}>
-        <button onClick={() => setSelectedUser(null)}>return</button>
+      <div className="inner-card inner-card--row">
+        <button className="btn" onClick={() => setSelectedUser(null)}>
+          Return
+        </button>
 
         <button
+          className="btn btn--primary"
           onClick={async () => {
             const ok = await modifyUserRole();
             if (!ok) window.alert("Did not update");
@@ -104,8 +99,9 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
         </button>
 
         <button
-          onClick={() => {
-            const ok = deleteUser();
+          className="btn btn--danger"
+          onClick={async () => {
+            const ok = await deleteUser();
             if (!ok) window.alert("Deletion did not succeed");
             else {
               setChange(true);

@@ -6,12 +6,10 @@ import useTeacherHook from "../../hooks/TeacherHooks";
 import useStudentHook from "../../hooks/StudentHooks";
 
 const ManageUsers = () => {
-
   const {getTeacher} = useTeacherHook();
   const {getStudent} = useStudentHook();
   const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
-  //Handles rerenders adter adding new user
   const [change, setChange] = useState(false);
   const [filteredUserList, setFilteredUserList] = useState([]);
   const [keyword, setKeyword] = useState("");
@@ -23,7 +21,6 @@ const ManageUsers = () => {
     return list.filter((user) => user.name.toLowerCase().includes(word));
   };
 
-  //initial render. API call here
   useEffect(() => {
     const handleList = async () => {
       const teachers = await getTeacher();
@@ -39,7 +36,6 @@ const ManageUsers = () => {
     handleList();
   }, [change]);
 
-  //filtering render
   useEffect(() => {
     const handleFiltering = () => {
       const newArray = filterList(userList, keyword);
@@ -51,7 +47,7 @@ const ManageUsers = () => {
   useEffect(() => {}, [selectedUser]);
 
   return (
-    <div>
+    <div className="inner-card inner-card--stack">
       {selectedUser && (
         <UserManageCard user={selectedUser} setSelectedUser={setSelectedUser} setChange={setChange} />
       )}
@@ -59,7 +55,7 @@ const ManageUsers = () => {
       {!selectedUser && (
         <>
           <h1>ManageUsers</h1>
-          <button onClick={() => {navigate("/admin/new_user")}}>Add users</button>
+          <button className="btn btn--primary" onClick={() => {navigate("/admin/new_user")}}>Add users</button>
           <label htmlFor="usersearch">Search by name:</label>
           <input
             type="text"
@@ -69,28 +65,10 @@ const ManageUsers = () => {
               setKeyword(evt.target.value);
             }}
           />
-          <div
-            style={{
-              backgroundColor: "white",
-              minHeight: "100px",
-              minWidth: "100px",
-              display: "grid",
-              gridTemplateColumns: "repeat(5, 1fr)",
-              gap: "12px",
-            }}
-          >
+          <div className="inner-card inner-card--wrap">
             {filteredUserList?.map((user) => {
               return (
-                <div
-                  key={user.firstName + user.id}
-                  style={{
-                    borderRadius: 10,
-                    backgroundColor: "yellow",
-                    color: "black",
-                    margin: 1,
-                    padding: 1,
-                  }}
-                >
+                <div key={user.firstName + user.id} className="inner-card">
                   <UserManageButtonAdmin
                     setSelectedUser={setSelectedUser}
                     user={user}

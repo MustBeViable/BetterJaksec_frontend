@@ -3,10 +3,9 @@ import LoginForm from "../components/LoginForm";
 
 const LogIn = () => {
   return (
-    <>
-      {/* Komponentit sisälle, tää o vaa se yleisnäkymä */}
-      <div><LoginForm /></div>
-    </>
+    <div className="main-card">
+      <LoginForm />
+    </div>
   );
 };
 
