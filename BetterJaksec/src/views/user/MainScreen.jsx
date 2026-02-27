@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
-import { Link, Outlet } from "react-router-dom";
 import AttendanceTrackingView from "./AttendanceTrackingView";
 
 const MainScreen = () => {
@@ -9,10 +8,11 @@ const MainScreen = () => {
   const { handleLogout, user } = useContext(UserContext);
 
   return (
-    <div>
+    <div className="main-card">
       <h1>MainScreen</h1>
-      <div>
+      <div className="inner-card inner-card--wrap">
         <button
+          className="btn"
           onClick={() => {
             navigate("/profile_page");
           }}
@@ -22,8 +22,9 @@ const MainScreen = () => {
 
         {user?.role === "student" && (
           <>
-            <button>Courses user (ei mitään vielä) </button>
+            <button className="btn">Courses user (ei mitään vielä) </button>
             <button
+              className="btn"
               onClick={() => {
                 navigate("/admin_attendance_tracking");
               }}
@@ -34,6 +35,7 @@ const MainScreen = () => {
         )}
         {user?.role === "teacher" && (
           <button
+            className="btn"
             onClick={() => {
               navigate("/courses");
             }}
@@ -42,6 +44,7 @@ const MainScreen = () => {
           </button>
         )}
         <button
+          className="btn btn--danger"
           onClick={() => {
             handleLogout();
           }}
@@ -49,9 +52,7 @@ const MainScreen = () => {
           log out
         </button>
       </div>
-      {user?.role === "student" && (
-        <AttendanceTrackingView />
-      )}
+      {user?.role === "student" && <AttendanceTrackingView />}
     </div>
   );
 };

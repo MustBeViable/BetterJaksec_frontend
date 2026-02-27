@@ -4,7 +4,6 @@ import { useUser } from "../../hooks/AuthHooks";
 import useStudentHook from "../../hooks/StudentHooks";
 import useTeacherHook from "../../hooks/TeacherHooks";
 
-//.
 const ChangePasswordPage = () => {
   const navigate = useNavigate();
   const { getUserByToken } = useUser();
@@ -29,7 +28,6 @@ const ChangePasswordPage = () => {
     try {
       const user = await getUserByToken();
       const role = user.role.toLowerCase();
-      
 
       if (role === "student") {
         await putStudent({ studentID: user.studentID, password });
@@ -45,50 +43,38 @@ const ChangePasswordPage = () => {
   };
 
   return (
-  <div style={{ display: "flex", justifyContent: "center", marginTop: "60px" }}>
-    <div style={{ background: "#f9f9f9", padding: "20px", borderRadius: "6px", width: "320px", display: "flex", flexDirection: "column", gap: "12px" }}>
-      <h2 style={{ textAlign: "center" }}>Change Password</h2>
+    <div className="main-card">
+      <div className="inner-card inner-card--stack">
+        <h2>Change Password</h2>
 
-      <input
-        type="password"
-        placeholder="New password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={{ padding: "10px", fontSize: "1rem" }}
-      />
+        <input
+          type="password"
+          placeholder="New password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      <input
-        type="password"
-        placeholder="Confirm new password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        style={{ padding: "10px", fontSize: "1rem" }}
-      />
+        <input
+          type="password"
+          placeholder="Confirm new password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
 
-      {error && (
-        <div style={{ color: "red", fontSize: "0.9rem", textAlign: "center" }}>
-          {error}
+        {error && <p style={{ color: "var(--danger)" }}>{error}</p>}
+
+        <div className="inner-card inner-card--row">
+          <button className="btn" onClick={handleCancel}>
+            Cancel
+          </button>
+
+          <button className="btn btn--primary" onClick={handleConfirm}>
+            Confirm
+          </button>
         </div>
-      )}
-
-      <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-        <button
-          onClick={handleCancel}
-          style={{ flex: 1, padding: "10px", cursor: "pointer" }}
-        >
-          Cancel
-        </button>
-
-        <button
-          onClick={handleConfirm}
-          style={{ flex: 1, padding: "10px", cursor: "pointer", background: "#007bff", color: "#fff", border: "none", borderRadius: "4px" }}
-        >
-          Confirm
-        </button>
       </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default ChangePasswordPage;

@@ -1,12 +1,8 @@
 const CourseList = ({ courses }) => {
-//.
   return (
-    <div style={{ border: "1px solid black", maxHeight: "100px", overflowY: "auto" }}>
+    <div className="inner-card inner-card--stack">
       {courses.map((course, index) => (
-        <div
-          key={index}
-          style={{ padding: "5px", borderBottom: "1px solid #ccc" }}
-        >
+        <div key={index} className="inner-card">
           {course.name}
         </div>
       ))}

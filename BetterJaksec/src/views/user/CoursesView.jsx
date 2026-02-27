@@ -16,22 +16,12 @@ const CoursesView = () => {
   }, []);
 
   return (
-    <div style={{ padding: "32px" }}>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-          }}
-        >
+    <div className="main-card">
+      <div className="inner-card inner-card--stack">
+        <div className="inner-card inner-card--row">
           <h1>Courses</h1>
           <button
+            className="btn"
             onClick={() => {
               navigate("/");
             }}
@@ -42,26 +32,11 @@ const CoursesView = () => {
 
         <h2>List of courses:</h2>
 
-        <div
-          style={{
-            background: "#f5f5f5",
-            padding: "20px",
-            borderRadius: "6px",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <div className="inner-card inner-card--stack">
           {courses?.map((course) => (
             <button
               key={course.id}
-              style={{
-                color: "#000000ff",
-                background: "#e0e0e0",
-                padding: "12px",
-                textAlign: "left",
-                borderRadius: "4px",
-                margin: "2px",
-              }}
+              className="btn"
               onClick={() => {
                 navigate("/courses/manage", {
                   state: { course },
@@ -73,8 +48,9 @@ const CoursesView = () => {
           ))}
         </div>
 
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div className="inner-card inner-card--row">
           <button
+            className="btn btn--primary"
             onClick={() => {
               navigate("/courses/manage");
             }}

@@ -53,31 +53,12 @@ const ManageLessons = () => {
   }, [course?.id, refreshKey]);
 
   return (
-    <div
-      style={{
-        padding: "24px",
-        background: "#f5f5f5",
-        minHeight: "100vh",
-      }}
-    >
-      <div
-        style={{
-          background: "#e0e0e0",
-          padding: "32px",
-          borderRadius: "8px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "32px",
-            color: "#070000",
-          }}
-        >
+    <div className="main-card">
+      <div className="inner-card inner-card--stack">
+        <div className="inner-card inner-card--row">
           <h1>Manage lessons</h1>
           <button
+            className="btn"
             type="button"
             onClick={() =>
               navigate("/courses/manage", {
@@ -89,9 +70,10 @@ const ManageLessons = () => {
           </button>
         </div>
 
-        <div style={{ display: "flex", gap: "32px" }}>
-          <div style={{ flex: 1 }}>
+        <div className="inner-card inner-card--row">
+          <div className="inner-card" style={{ flex: 1 }}>
             <button
+              className="btn btn--primary"
               type="button"
               onClick={() => {
                 setSelectedLesson(null);
@@ -102,30 +84,15 @@ const ManageLessons = () => {
             </button>
           </div>
 
-          <div
-            style={{
-              flex: 1,
-              background: "#ffffff",
-              padding: "16px",
-              borderRadius: "8px",
-              color: "#000000"
-            }}
-          >
+          <div className="inner-card inner-card--stack" style={{ flex: 1 }}>
             <h2>Lessons:</h2>
 
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
-            >
+            <div className="inner-card inner-card--stack">
               {lessonList?.map((lesson) => (
                 <button
                   key={lesson.lessonID ?? lesson.id}
                   type="button"
-                  style={{
-                    background: "#d9d9d9",
-                    padding: "12px",
-                    textAlign: "left",
-                    color: "#000000ff"
-                  }}
+                  className="btn"
                   onClick={() => {
                     setSelectedLesson(lesson);
                     setIsAddLessonOpen(true);
@@ -143,6 +110,7 @@ const ManageLessons = () => {
 
       {isAddLessonOpen && (
         <div
+          className="inner-card"
           style={{
             position: "fixed",
             inset: 0,
@@ -157,6 +125,7 @@ const ManageLessons = () => {
           }}
         >
           <div
+            className="inner-card"
             style={{ background: "#fff", padding: "24px", borderRadius: "8px" }}
             onClick={(e) => e.stopPropagation()}
           >

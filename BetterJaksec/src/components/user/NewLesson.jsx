@@ -95,18 +95,13 @@ const NewLesson = ({
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-        color: "#040000",
-      }}
-    >
-      <h2>New lesson</h2>
+    <div className="inner-card inner-card--stack">
+      <h1>New lesson</h1>
 
       <label>
+        <p>
         Lesson name:
+        </p>
         <input
           type="text"
           value={lessonName}
@@ -115,13 +110,13 @@ const NewLesson = ({
             if (nameError) setNameError("");
           }}
         />
-        {nameError && (
-          <span style={{ color: "red", marginLeft: "8px" }}>{nameError}</span>
-        )}
+        {nameError && <p style={{ color: "var(--danger)" }}>{nameError}</p>}
       </label>
 
       <label>
+        <p>
         Lesson date:
+        </p>
         <input
           type="date"
           value={lessonDate}
@@ -130,12 +125,11 @@ const NewLesson = ({
             if (dateError) setDateError("");
           }}
         />
-        {dateError && (
-          <span style={{ color: "red", marginLeft: "8px" }}>{dateError}</span>
-        )}
+        {dateError && <p style={{ color: "var(--danger)" }}>{dateError}</p>}
       </label>
 
       <button
+        className="btn btn--primary"
         onClick={async () => {
           const nameOk = lessonName.trim().length > 0;
           const dateOk = lessonDate.trim().length > 0;
@@ -158,6 +152,7 @@ const NewLesson = ({
       </button>
 
       <button
+        className="btn"
         onClick={() => {
           setIsAddLessonOpen(false);
           setSelectedLesson(null);
@@ -167,8 +162,9 @@ const NewLesson = ({
       </button>
 
       {selectedLesson && (
-        <div>
+        <div className="inner-card inner-card--row">
           <button
+            className="btn btn--danger"
             onClick={async () => {
               const ok = await removeLesson();
               if (!ok) {
@@ -182,6 +178,7 @@ const NewLesson = ({
             Delete lesson
           </button>
           <button
+            className="btn"
             onClick={() => {
               setIsAddLessonOpen(false);
               setSelectedLesson(null);
