@@ -48,7 +48,15 @@ const ProfilePage = () => {
           }}
         >
           <h2>Profile</h2>
-
+          {(user?.role === "student" || user?.role === "teacher") && (
+            <button
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              Return
+            </button>
+          )}
           <div
             style={{
               background: "#f5f5f5",
