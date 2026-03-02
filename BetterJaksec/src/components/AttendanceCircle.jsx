@@ -5,15 +5,14 @@ export default function AttendanceCircle({ attended, total, size = 250 }) {
 
   return (
     <div
-      className="inner-card"
       style={{
         position: "relative",
         width: `${size}px`,
         height: `${size}px`,
         borderRadius: "50%",
         background: `conic-gradient(
-          green ${percentage}%,
-          red ${percentage}% 100%
+          #4caf50 ${percentage}%,
+          #f44336 ${percentage}% 100%
         )`,
         display: "flex",
         justifyContent: "center",
@@ -21,12 +20,16 @@ export default function AttendanceCircle({ attended, total, size = 250 }) {
       }}
     >
       <div
-        className="inner-card"
         style={{
           position: "absolute",
-          color: "#000",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          color: "#fff",
           fontSize: `${size * 0.18}px`,
           fontWeight: "bold",
+          textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+          background: "transparent",
         }}
       >
         {percentage}%

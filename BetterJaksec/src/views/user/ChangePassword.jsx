@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/AuthHooks";
 import useStudentHook from "../../hooks/StudentHooks";
@@ -7,16 +7,36 @@ import useTeacherHook from "../../hooks/TeacherHooks";
 const ChangePasswordPage = () => {
   const navigate = useNavigate();
   const { getUserByToken } = useUser();
-
   const { putStudent } = useStudentHook();
   const { putTeacher } = useTeacherHook();
+
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getUserByToken();
+        setUser(userData);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, []);
+
   const handleCancel = () => {
-    navigate("/profile_page");
+    if (user?.role?.toLowerCase() === "admin") {
+      navigate("/admin/profile");
+    } else {
+      navigate("/profile_page");
+    }
   };
 
   const handleConfirm = async () => {
@@ -26,21 +46,34 @@ const ChangePasswordPage = () => {
     }
 
     try {
-      const user = await getUserByToken();
       const role = user.role.toLowerCase();
+      const updateData = {
+        email: user.email,
+        password,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      };
 
       if (role === "student") {
-        await putStudent({ studentID: user.studentID, password });
-      } else if (role === "teacher") {
-        await putTeacher({ teacherID: user.teacherID, password });
+        await putStudent({ studentID: user.id, ...updateData });
+      } else if (role === "teacher" || role === "admin") {
+        await putTeacher({ teacherID: user.id, ...updateData });
+      } else {
+        console.log("Unhandled role:", role);
       }
 
-      navigate("/profile_page");
+      if (role === "admin") {
+        navigate("/admin/profile");
+      } else {
+        navigate("/profile_page");
+      }
     } catch (err) {
-      console.log(err);
+      console.error("Error updating password:", err);
       setError("Failed to change password. Try again.");
     }
   };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="main-card">
@@ -67,7 +100,6 @@ const ChangePasswordPage = () => {
           <button className="btn" onClick={handleCancel}>
             Cancel
           </button>
-
           <button className="btn btn--primary" onClick={handleConfirm}>
             Confirm
           </button>

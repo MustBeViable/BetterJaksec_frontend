@@ -24,35 +24,26 @@ const ProfilePage = () => {
   if (!user) return <div>Loading...</div>;
 
   return (
-    <>
+    <div className="main-card inner-card--stack">
+      <div className="inner-card inner-card--row">
+        <h1>Profile</h1>
+      </div>
+
       <div className="inner-card inner-card--stack">
         <div className="inner-card inner-card--stack">
-          <h2>Profile</h2>
-          {(user?.role === "student" || user?.role === "teacher") && (
-            <button
-              className="btn"
-              onClick={() => {
-                navigate("/");
-              }}
-            >
-              Return
-            </button>
-          )}
-          <div className="inner-card inner-card--stack">
-            <p>Email: {user.email}</p>
-            <p>Name: {user.firstName}</p>
-            <p>Last Name: {user.lastName}</p>
-          </div>
-
-          <button
-            className="btn btn--primary"
-            onClick={() => navigate("/change-password")}
-          >
-            Change password
-          </button>
+          <p>Email: {user.email}</p>
+          <p>Name: {user.firstName}</p>
+          <p>Last Name: {user.lastName}</p>
         </div>
+
+        <button
+          className="btn btn--primary"
+          onClick={() => navigate("/change-password")}
+        >
+          Change password
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 
