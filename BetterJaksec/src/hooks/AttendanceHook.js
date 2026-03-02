@@ -3,12 +3,13 @@ import { fetchData } from "../utils/fetchData";
 const useAttendanceHook = () => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL + "/student";
 
-//Create attendance
+  // Create attendance
   const postAttendance = async (studentId, attendance) => {
     const body = {
       present: attendance.present,
       lessonId: attendance.lessonId,
       lessonDate: attendance.lessonDate,
+      reason: attendance.reason,
     };
 
     const options = {
@@ -30,8 +31,7 @@ const useAttendanceHook = () => {
     }
   };
 
-    //get single attendance
-
+  // Get single attendance
   const getAttendance = async (studentId, attendanceId) => {
     try {
       return await fetchData(
@@ -44,8 +44,7 @@ const useAttendanceHook = () => {
     }
   };
 
-  //Update attendance
-
+  // Update attendance
   const putAttendance = async (studentId, attendanceId, updates) => {
     const options = {
       method: "PUT",
