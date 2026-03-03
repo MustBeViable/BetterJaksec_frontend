@@ -4,6 +4,8 @@ COPY BetterJaksec/package*.json ./
 RUN npm ci
 COPY BetterJaksec/ .
 COPY BetterJaksec/.env.sample .env
+ARG VITE_API_BASE_URL=/api
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN cat .env
 RUN npm run build
 FROM node:20-alpine
