@@ -58,6 +58,7 @@ pipeline {
 
                         ${DOCKER_CMD} buildx build \
                             --platform linux/amd64,linux/arm64 \
+                            --build-arg VITE_API_BASE_URL=/api \
                             -t ${DOCKER_IMAGE}:${DOCKER_TAG} \
                             --push \
                             .
