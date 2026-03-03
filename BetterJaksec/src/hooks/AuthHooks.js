@@ -1,7 +1,7 @@
 import { fetchData } from "../utils/fetchData";
 //.
 const useAuthentication = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL + "/auth";
+  const baseUrl = "/api/auth";
   const postLogin = async (inputs) => {
     return await fetchData(`${baseUrl}/login`, {
       method: "POST",

@@ -1,7 +1,7 @@
 import { fetchData } from "../utils/fetchData";
 
 const useTeacherHook = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL + "/teacher";
+  const baseUrl = "/api/teacher";
 
   /**
    *

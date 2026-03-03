@@ -1,7 +1,7 @@
 import { fetchData } from "../utils/fetchData";
 
 const useAttendanceHook = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL + "/student";
+  const baseUrl = "/api/student";
 
   // Create attendance
   const postAttendance = async (studentId, attendance) => {

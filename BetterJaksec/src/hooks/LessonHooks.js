@@ -13,7 +13,7 @@ const normalizeDateToIso = (value) => {
 };
 
 const useLessonHook = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL + "/lesson";
+  const baseUrl = "/api/lesson";
 
   /**
    *

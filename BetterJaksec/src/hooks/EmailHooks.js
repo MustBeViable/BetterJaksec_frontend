@@ -1,7 +1,7 @@
 import { fetchData } from "../utils/fetchData";
 
 const useEmailHook = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL + "/auth/email";
+  const baseUrl = "/api/auth/email";
 
   const checkEmail = async (email) => {
     try {

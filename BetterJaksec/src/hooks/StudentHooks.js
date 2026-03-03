@@ -1,7 +1,7 @@
 import { fetchData } from "../utils/fetchData";
 
 const useStudentHook = () => {
-  const baseUrl = import.meta.env.VITE_API_BASE_URL + "/student";
+  const baseUrl = "/api/student";
   const postStudent = async (student) => {
     const body = {
       firstName: student.firstName,
