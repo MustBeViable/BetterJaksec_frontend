@@ -3,7 +3,7 @@ WORKDIR /app
 COPY BetterJaksec/package*.json ./
 RUN npm ci
 COPY BetterJaksec/ .
-COPY BetterJaksec/.env ./env
+COPY BetterJaksec/.env .env
 RUN npm run build
 FROM node:20-alpine
 WORKDIR /app
