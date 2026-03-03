@@ -24,6 +24,14 @@ pipeline {
                 }
             }
         }
+        stage('Prepare Env') {
+            steps {
+                echo "Setting up .env for Vite build..."
+                dir("${APP_DIR}") {
+                    sh 'cp .env.sample .env'
+                }
+            }
+        }
         
         stage('Build') {
             steps {
