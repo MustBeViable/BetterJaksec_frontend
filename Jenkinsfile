@@ -7,6 +7,7 @@ pipeline {
         DOCKER_IMAGE = "leevivl/better-jaksec-site"
         DOCKER_TAG = "latest"
         DOCKER_CREDENTIALS_ID = "docker-pat"
+        APP_DIR = "BetterJaksec"
     }
 
     tools {
@@ -18,14 +19,18 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo "Installing npm dependencies..."
-                sh 'npm ci'
+                dir("${APP_DIR}") {
+                    sh 'npm ci'
+                }
             }
         }
         
         stage('Build') {
             steps {
                 echo "Building Vite production build..."
-                sh 'npm run build'
+                dir("${APP_DIR}") {
+                    sh 'npm run build'
+                }
             }
         }
 
