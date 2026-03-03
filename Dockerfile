@@ -3,7 +3,7 @@ WORKDIR /app
 COPY BetterJaksec/package*.json ./
 RUN npm ci
 COPY BetterJaksec/ .
-COPY BetterJaksec/.env .env
+COPY BetterJaksec/.env.sample .env
 ARG VITE_API_BASE_URL=/api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN echo $VITE_API_BASE_URL
