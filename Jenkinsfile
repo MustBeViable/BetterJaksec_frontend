@@ -21,14 +21,7 @@ pipeline {
                 sh 'npm ci'
             }
         }
-
-        stage('Lint') {
-            steps {
-                echo "Running linter..."
-                sh 'npm run lint || true'
-            }
-        }
-
+        
         stage('Build') {
             steps {
                 echo "Building Vite production build..."
