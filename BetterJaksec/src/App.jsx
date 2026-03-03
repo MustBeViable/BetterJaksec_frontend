@@ -33,6 +33,9 @@ function App() {
               path="/attendance_tracking"
               element={<AttendanceTrackingView />}
             />
+            <Route
+              path="admin_attendance_tracking"
+              element={<AdminAttendanceTrackingView />} />
             <Route path="/courses" element={<CoursesView />} />
             <Route path="/courses/manage" element={<ManageCourses />} />
             <Route
