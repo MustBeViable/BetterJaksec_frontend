@@ -3,8 +3,10 @@ WORKDIR /app
 COPY BetterJaksec/package*.json ./
 RUN npm ci
 COPY BetterJaksec/ .
-RUN npm run build
-
-FROM alpine:latest
-WORKDIR /app
-COPY --from=builder /app/dist ./dist
+COPY BetterJaksec/.env.sample .env
+RUN cat .env
+RUN npm run build  # creates /app/build
+FROM nginx:alpine
+COPY --from=builder /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
