@@ -39,6 +39,10 @@ function App() {
               path="/courses/manage/manage_lessons"
               element={<ManageLessons />}
             />
+            <Route
+              path="/admin_attendance_tracking"
+              element={<AdminAttendanceTrackingView />}
+            />
 
             {/* Admin routing */}
 
@@ -47,10 +51,7 @@ function App() {
               <Route path="profile" element={<ProfilePage />} />
               <Route path="users" element={<ManageUsers />} />
               <Route path="new_user" element={<NewUser />} />
-              <Route
-              path="admin_attendance_tracking"
-              element={<AdminAttendanceTrackingView />} />
-              </Route>
+            </Route>
           </Routes>
         </AdminProvider>
       </UserProvider>
