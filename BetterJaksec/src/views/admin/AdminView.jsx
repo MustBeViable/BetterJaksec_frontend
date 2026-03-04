@@ -25,7 +25,7 @@ const AdminView = () => {
         <Link className="btn" to="/admin/users">
           Manage users
         </Link>
-        <Link className="btn" to="/admin/admin_attendance_tracking">
+        <Link className="btn" to="/admin_attendance_tracking">
           Attendance tracking view
         </Link>
         <button
