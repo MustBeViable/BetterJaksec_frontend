@@ -127,9 +127,11 @@ const AdminAttendanceTrackingView = () => {
           }}
         >
           <h3 style={{ margin: 0 }}>Courses</h3>
+          {userRole === "teacher" && (
           <button className="btn" onClick={() => navigate("/")}>
             Return
           </button>
+          )}
         </div>
 
         <div style={{ maxHeight: "150px", overflowY: "auto" }}>
