@@ -27,6 +27,16 @@ const ProfilePage = () => {
     <div className="main-card inner-card--stack">
       <div className="inner-card inner-card--row">
         <h1>Profile</h1>
+        {(user?.role === "student" || user?.role === "teacher") && (
+          <button
+            className="btn"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Return
+          </button>
+        )}
       </div>
 
       <div className="inner-card inner-card--stack">
