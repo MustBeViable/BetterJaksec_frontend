@@ -12,6 +12,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [studentList, setStudentList] = useState([]);
   const [visibleStudentList, setVisibleStudentList] = useState([]);
+  const [alreadyInCourse, setAlreadyInCourse] = useState([]);
   const { getStudent } = useStudentHook();
   const { createGrade } = useStudentCourse();
 
@@ -35,8 +36,13 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
     );
   };
 
+
   const handleStudentUpdate = async () => {
-    const requests = [...selectedIds].map((studentId) => {
+    const newIds = [...selectedIds].filter((id) => !alreadyInCourse.has(id));
+
+    if (newIds.length === 0) return true;
+
+    const requests = newIds.map((studentId) => {
       const body = {
         studentId,
         courseId: course.id,
@@ -54,7 +60,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
       if (submit) setLoading("loading...");
       if (!submit) setLoading("");
     };
-    loading;
+    loading();
   }, [submit]);
 
   useEffect(() => {
@@ -62,8 +68,8 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
       setVisibleStudentList((prev) => {
         const next = [...prev];
         next.sort((a, b) => {
-          const aSelected = selectedIds.has(a.studentID);
-          const bSelected = selectedIds.has(b.studentID);
+          const aSelected = selectedIds?.has(a.studentID);
+          const bSelected = selectedIds?.has(b.studentID);
           if (aSelected !== bSelected) return aSelected ? -1 : 1;
           return `${a.firstName} ${a.lastName}`.localeCompare(
             `${b.firstName} ${b.lastName}`,
@@ -88,6 +94,17 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
       if (!students) return;
       setStudentList(students);
       setVisibleStudentList(students);
+      const alreadyInCourse = new Set(
+        students
+          .filter(
+            (student) =>
+              Array.isArray(student.grades) &&
+              student.grades.some((g) => g.courseId === course.id),
+          )
+          .map((student) => student.studentID),
+      );
+      setSelectedIds(alreadyInCourse);
+      setAlreadyInCourse(alreadyInCourse);
     };
     initialStudents();
   }, []);
@@ -123,7 +140,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
                 id={String(s.studentID)}
                 type="button"
                 onClick={() => toggleStudent(s.studentID)}
-                className={isSelected ? "btn btn--primary" : "btn"}
+                className={isSelected ? "btn--selected" : "btn"}
               >
                 {s.firstName} {s.lastName}
               </button>

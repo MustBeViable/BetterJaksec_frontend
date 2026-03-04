@@ -14,6 +14,9 @@
   --primary: #6c7dff;
   --primary-hover: #5b6cff;
 
+  --selected: #fd0000;
+  --selected-hover: #ff3333;
+
   --danger: #ff5b5b;
   --danger-hover: #ff4444;
 
@@ -143,11 +146,11 @@ a:hover {
 }
 
 .btn,
-button.btn {
+button.btn,
+.btn--selected,
+button.btn--selected {
   appearance: none;
   border: 1px solid var(--border-strong);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
   border-radius: 12px;
   padding: 10px 14px;
   cursor: pointer;
@@ -156,12 +159,32 @@ button.btn {
   font-size: var(--font-btn);
 }
 
+.btn,
+button.btn {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+}
+
 .btn:hover {
   border-color: rgba(108, 125, 255, 0.55);
   background: rgba(108, 125, 255, 0.08);
 }
 
-.btn:active {
+.btn--selected,
+button.btn--selected {
+  background: var(--selected);
+  color: #ffffff;
+  border-color: var(--selected);
+  box-shadow: 0 0 0 2px rgba(108, 125, 255, 0.35);
+}
+
+.btn--selected:hover {
+  background: var(--selected-hover);
+  border-color: var(--selected-hover);
+}
+
+.btn:active,
+.btn--selected:active {
   transform: translateY(1px);
 }
 
