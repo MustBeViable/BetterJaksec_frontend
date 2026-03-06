@@ -10,28 +10,28 @@ const MainScreen = () => {
     <div className="main-card">
       <h1>MainScreen</h1>
       <div className="inner-card inner-card--wrap">
-        <button
-          className="btn"
-          onClick={() => navigate("/profile_page")}
-        >
+        <button className="btn" onClick={() => navigate("/profile_page")}>
           Profile
         </button>
 
         {user?.role === "student" && (
-          <button
-            className="btn"
-            onClick={() => navigate("/attendance_tracking")}
-          >
-            Courses and attendance stats
-          </button>
+          <>
+            <button
+              className="btn"
+              onClick={() => navigate("/attendance_tracking")}
+            >
+              Courses and attendance stats
+            </button>
+
+            <button className="btn" onClick={() => navigate("/readqr")}>
+              Read QR
+            </button>
+          </>
         )}
 
         {user?.role === "teacher" && (
           <>
-            <button
-              className="btn"
-              onClick={() => navigate("/courses")}
-            >
+            <button className="btn" onClick={() => navigate("/courses")}>
               Courses
             </button>
             <button
@@ -43,10 +43,7 @@ const MainScreen = () => {
           </>
         )}
 
-        <button
-          className="btn btn--danger"
-          onClick={handleLogout}
-        >
+        <button className="btn btn--danger" onClick={handleLogout}>
           Log out
         </button>
       </div>
@@ -54,4 +51,4 @@ const MainScreen = () => {
   );
 };
 
-export default MainScreen
+export default MainScreen;

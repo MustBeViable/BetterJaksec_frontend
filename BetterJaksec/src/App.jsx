@@ -34,12 +34,11 @@ function App() {
               path="/attendance_tracking"
               element={<AttendanceTrackingView />}
             />
-            <Route path="/readqr"
-            element={<QRScanner/>}
-            />
+            <Route path="/readqr" element={<QRScanner />} />
             <Route
               path="admin_attendance_tracking"
-              element={<AdminAttendanceTrackingView />} />
+              element={<AdminAttendanceTrackingView />}
+            />
             <Route path="/courses" element={<CoursesView />} />
             <Route path="/courses/manage" element={<ManageCourses />} />
             <Route
