@@ -21,10 +21,7 @@ const useAttendanceHook = () => {
     };
 
     try {
-      return await fetchData(
-        `${baseUrl}/${studentId}/attendance`,
-        options
-      );
+      return await fetchData(`${baseUrl}/${studentId}/attendance`, options);
     } catch (error) {
       console.log(error);
       return false;
@@ -36,8 +33,17 @@ const useAttendanceHook = () => {
     try {
       return await fetchData(
         `${baseUrl}/${studentId}/attendance/${attendanceId}`,
-        { method: "GET" }
+        { method: "GET" },
       );
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
+  const getMarkedAttendances = async (lessonId) => {
+    try {
+      return await fetchData(`${baseUrl}/1/attendance/forlesson/${lessonId}`, { method: "GET" });
     } catch (error) {
       console.log(error);
       return false;
@@ -57,7 +63,7 @@ const useAttendanceHook = () => {
     try {
       return await fetchData(
         `${baseUrl}/${studentId}/attendance/${attendanceId}`,
-        options
+        options,
       );
     } catch (error) {
       console.log(error);
@@ -65,7 +71,7 @@ const useAttendanceHook = () => {
     }
   };
 
-  return { postAttendance, getAttendance, putAttendance };
+  return { postAttendance, getAttendance, putAttendance, getMarkedAttendances };
 };
 
 export default useAttendanceHook;
