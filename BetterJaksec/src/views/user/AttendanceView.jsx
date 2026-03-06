@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useStudentCourse from "../../hooks/StudentCourseHook";
 import useStudentHook from "../../hooks/StudentHooks";
 import useAttendanceHook from "../../hooks/AttendanceHook";
+import QRGenerator from "../../components/QRGenerator.jsx";
+import useStudentAttendance from "../../hooks/StudentAttendanceHook";
 
 const AttendanceView = () => {
   const navigate = useNavigate();
@@ -64,22 +66,35 @@ const AttendanceView = () => {
   useEffect(() => {
     const updateStudentList = () => {};
   }, [presentStudent, absentStudent]);
-
   useEffect(() => {
-    const initialStudents = async () => {
-      if (!lessonInfo) return;
-      if (!lessonInfo.courseId) return;
-      const studentsInCourse = await getCourseStudents(lessonInfo.courseId);
-      const allStudents = Promise.all(
-        studentsInCourse.map((studentId) => {
-          return getStudent(studentId);
-        }),
-      );
-      setAbsentStudent((await allStudents).filter(Boolean));
-    };
-    initialStudents();
-  }, [lessonInfo]);
+    if (!lessonInfo.lessonId) return;
 
+    const fetchAttendance = async () => {
+      const studentIds = await getCourseStudents(lessonInfo.courseId);
+      const allStudents = await Promise.all(
+        studentIds.map((id) => getStudent(id)),
+      );
+      const validStudents = allStudents.filter(Boolean);
+
+      const present = [];
+      const absent = [];
+
+      validStudents.forEach((student) => {
+        const attended = student.attendance?.some(
+          (att) => att.lessonId === lessonInfo.lessonId && att.present,
+        );
+        if (attended) present.push(student);
+        else absent.push(student);
+      });
+
+      setPresentStudent(present);
+      setAbsentStudent(absent);
+    };
+
+    fetchAttendance();
+    const interval = setInterval(fetchAttendance, 60000);
+    return () => clearInterval(interval);
+  }, [lessonInfo.lessonId]);
   useEffect(() => {
     const initLessonInfo = () => {
       if (!state) {
@@ -99,9 +114,7 @@ const AttendanceView = () => {
           ? lessonInfo?.course?.name
           : "Placeholder name"}
       </h1>
-
-      <img src="/images/qr_code.svg" alt="" />
-
+      <QRGenerator value={{ lessonId: lessonInfo.lessonId }} size={256} />
       <div className="inner-card inner-card--stack">
         <h2>Present student:</h2>
         <div className="inner-card inner-card--wrap">

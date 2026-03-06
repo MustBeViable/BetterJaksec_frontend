@@ -16,6 +16,7 @@ import ManageCourses from "./views/user/ManageCourses";
 import ManageLessons from "./views/user/ManageLessons";
 import { UserProvider } from "./contexts/UserContext.jsx";
 import { AdminProvider } from "./contexts/AdminContext.jsx";
+import QRScanner from "./components/QRReader.jsx";
 
 function App() {
   return (
@@ -33,9 +34,11 @@ function App() {
               path="/attendance_tracking"
               element={<AttendanceTrackingView />}
             />
+            <Route path="/readqr" element={<QRScanner />} />
             <Route
               path="admin_attendance_tracking"
-              element={<AdminAttendanceTrackingView />} />
+              element={<AdminAttendanceTrackingView />}
+            />
             <Route path="/courses" element={<CoursesView />} />
             <Route path="/courses/manage" element={<ManageCourses />} />
             <Route
