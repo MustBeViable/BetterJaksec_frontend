@@ -3,79 +3,130 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/AuthHooks";
 import useStudentHook from "../../hooks/StudentHooks";
 import useCourseHook from "../../hooks/CourseHook";
+import useAttendanceHook from "../../hooks/AttendanceHook";
 import AttendanceCircle from "../../components/AttendanceCircle";
 
 const AttendanceTrackingView = () => {
   const navigate = useNavigate();
+
   const { getUserByToken } = useUser();
   const { getStudent } = useStudentHook();
   const { getCourse } = useCourseHook();
+  const { putAttendance } = useAttendanceHook();
 
   const [student, setStudent] = useState(null);
   const [courses, setCourses] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [reasons, setReasons] = useState({});
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadData = async () => {
       try {
         const user = await getUserByToken();
         if (!user?.id) return;
 
         const [studentData, coursesData] = await Promise.all([
           getStudent(user.id),
-          getCourse(),
+          getCourse()
         ]);
 
         setStudent(studentData);
         setCourses(coursesData || []);
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        console.error(err);
       }
     };
 
-    fetchData();
+    loadData();
   }, []);
 
-  if (!student || courses.length === 0) return <div>Loading...</div>;
+  if (!student || !courses.length) return <div>Loading...</div>;
 
   const selectedCourse = courses.find(c => c.id === selectedCourseId);
   const lessonIds = selectedCourse?.lessonIds || [];
 
-  const currentAttendance = !selectedCourseId
-    ? student.attendance || []
-    : (student.attendance || []).filter(record =>
-        lessonIds.includes(record.lessonId)
-      );
+  const filteredAttendance = (student.attendance || []).filter(a =>
+    !selectedCourseId || lessonIds.includes(a.lessonId)
+  );
 
-  const total = currentAttendance.length;
-  const attended = currentAttendance.filter(r => r.present).length;
+  const total = filteredAttendance.length;
+  const attended = filteredAttendance.filter(a => a.present).length;
+
+  const handleReasonChange = (id, value) => {
+    setReasons(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleConfirm = async (record) => {
+    const id = record.lessonId + record.lessonDate;
+    const reason = reasons[id] ?? "";
+
+    const success = await putAttendance(student.id, record.id, {
+      present: record.present,
+      reason
+    });
+
+    if (!success) return;
+
+    setStudent(prev => ({
+      ...prev,
+      attendance: prev.attendance.map(a =>
+        a.lessonId === record.lessonId && a.lessonDate === record.lessonDate
+          ? { ...a, reason }
+          : a
+      )
+    }));
+
+    setEditingId(null);
+    setReasons(prev => {
+      const copy = { ...prev };
+      delete copy[id];
+      return copy;
+    });
+  };
+
+  const buttonStyle = {
+    color: "#fff",
+    backgroundColor: "#6c7dff",
+    border: "1px solid #6c7dff",
+    padding: "6px 12px",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: 700
+  };
+
+  const cancelButtonStyle = {
+    ...buttonStyle,
+    backgroundColor: "#d9534f",
+    border: "1px solid #d9534f"
+  };
 
   return (
     <div className="main-card inner-card--stack">
+
       <div className="inner-card inner-card--row">
         <h1>Attendance Tracking</h1>
-        <button
-          className="btn"
-          onClick={() => navigate('/')}
-        >
-          Return
-        </button>
+        <button className="btn" onClick={() => navigate("/")}>Return</button>
       </div>
 
       <div className="inner-card">
-        <label htmlFor="courseSelect">Choose a course:</label>
+        <label style={{ fontWeight: "600" }}>Choose a course:</label>
+
         <select
-          id="courseSelect"
           value={selectedCourseId || ""}
-          onChange={(e) =>
-            setSelectedCourseId(e.target.value ? Number(e.target.value) : null)
-          }
+          onChange={e => setSelectedCourseId(e.target.value ? Number(e.target.value) : null)}
+          style={{
+            backgroundColor: "#ffffff",
+            color: "#000000",
+            border: "1px solid #ccc",
+            padding: "6px",
+            borderRadius: "6px",
+            marginLeft: "8px"
+          }}
         >
           <option value="">All Courses</option>
-          {courses.map(course => (
-            <option key={course.id} value={course.id}>
-              {course.name}
-            </option>
+          {courses.map(c => (
+            <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
       </div>
@@ -91,29 +142,74 @@ const AttendanceTrackingView = () => {
 
       <div className="inner-card">
         <h3>Attendance List</h3>
-        <div className="inner-card inner-card--stack">
-          {currentAttendance.length === 0 ? (
-            <p>No attendance records.</p>
-          ) : (
-            currentAttendance.map((record, idx) => (
+        {filteredAttendance.length === 0 ? (
+          <p>No attendance records.</p>
+        ) : (
+          filteredAttendance.map(record => {
+            const id = record.lessonId + record.lessonDate;
+            const isEditing = editingId === id;
+            const reasonText = record.reason || "None";
+
+            return (
               <div
-                key={idx}
+                key={id}
                 className="inner-card"
                 style={{
                   backgroundColor: record.present ? "#d4edda" : "#f8d7da",
                   color: record.present ? "#155724" : "#721c24",
                   padding: "8px",
                   margin: "4px 0",
-                  borderRadius: "4px",
+                  borderRadius: "4px"
                 }}
               >
-                {new Date(record.lessonDate).toLocaleDateString()} —{" "}
-                {record.present ? "Present" : "Absent"}
+                <div>
+                  {new Date(record.lessonDate).toLocaleDateString()} — {record.present ? "Present" : "Absent"}
+                </div>
+
+                {!record.present && (
+                  <div style={{ marginTop: "6px", display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {!isEditing && <div>Reason: {reasonText}</div>}
+
+                    {isEditing ? (
+                      <>
+                        <input
+                          type="text"
+                          placeholder="Reason..."
+                          value={reasons[id] ?? ""}
+                          onChange={e => handleReasonChange(id, e.target.value)}
+                          style={{
+                            padding: "6px",
+                            fontSize: "1rem",
+                            flex: 1,
+                            color: "#000",
+                            background: "#ffffff",
+                            border: "1px solid #ccc",
+                            borderRadius: "6px",
+                            outline: "none"
+                          }}
+                        />
+                        <button style={buttonStyle} onClick={() => handleConfirm(record)}>Save</button>
+                        <button style={cancelButtonStyle} onClick={() => setEditingId(null)}>Cancel</button>
+                      </>
+                    ) : (
+                      <button
+                        style={buttonStyle}
+                        onClick={() => {
+                          setEditingId(id);
+                          setReasons(prev => ({ ...prev, [id]: record.reason ?? "" }));
+                        }}
+                      >
+                        {record.reason ? "Edit" : "Add reason"}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
-            ))
-          )}
-        </div>
+            );
+          })
+        )}
       </div>
+
     </div>
   );
 };

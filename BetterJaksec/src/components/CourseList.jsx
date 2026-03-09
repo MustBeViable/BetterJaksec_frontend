@@ -13,8 +13,7 @@ const CourseList = ({ courses, onSelect, selectedCourse }) => {
             onClick={() => onSelect(isSelected ? null : course)}
             style={{
               cursor: "pointer",
-              backgroundColor: isSelected ? "#d0f0ff" : "inherit",
-            }}
+              backgroundColor: isSelected ? "#2c354a" : "inherit"}}
           >
             {course.name}
           </div>

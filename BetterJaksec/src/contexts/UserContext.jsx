@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { useAuthentication, useUser } from "../hooks/AuthHooks";
 import { useNavigate } from "react-router-dom";
-//.
+
 const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
@@ -16,25 +16,33 @@ const UserProvider = ({ children }) => {
 
       localStorage.setItem("token", result.token);
       setUser(result);
-      alert("Login successful");
+
       if (result.role === "admin") navigate("/admin");
-      else {
-        navigate("/");
-      }
+      else navigate("/");
+
+      return { success: true };
+
     } catch (error) {
       console.error("Login error:", error.message);
-      alert(error.message || "Login failed");
+
+      localStorage.removeItem("token");
+
+      let message = "Login failed";
+      if (error.message.includes("401")) {
+        message = "Invalid email or password";
+      }
+
+      return {
+        success: false,
+        message: message,
+      };
     }
   };
 
   const handleLogout = () => {
-    try {
-      localStorage.removeItem("token");
-      setUser(null);
-      navigate("/login");
-    } catch (e) {
-      console.log("Logout failed:", e.message);
-    }
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
   };
 
   const handleAutoLogin = async () => {
@@ -53,6 +61,7 @@ const UserProvider = ({ children }) => {
       setUser(null);
     }
   };
+
   useEffect(() => {
     const tryAutoLogin = async () => {
       await handleAutoLogin();
