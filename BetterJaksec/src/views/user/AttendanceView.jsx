@@ -114,7 +114,20 @@ const AttendanceView = () => {
           ? lessonInfo?.course?.name
           : "Placeholder name"}
       </h1>
-      <QRGenerator value={{ lessonId: lessonInfo.lessonId }} size={256} />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "fit-content",
+          margin: "0 auto",
+          borderRadius: "10px",
+          backgroundColor: "#fefcfcff",
+          padding: "1rem",
+        }}
+      >
+        <QRGenerator value={{ lessonId: lessonInfo.lessonId }} size={256} />
+      </div>
       <div className="inner-card inner-card--stack">
         <h2>Present student:</h2>
         <div className="inner-card inner-card--wrap">
