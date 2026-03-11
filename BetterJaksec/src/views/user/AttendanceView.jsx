@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useStudentCourse from "../../hooks/StudentCourseHook";
 import useStudentHook from "../../hooks/StudentHooks";
 import useAttendanceHook from "../../hooks/AttendanceHook";
 import QRGenerator from "../../components/QRGenerator.jsx";
-import useStudentAttendance from "../../hooks/StudentAttendanceHook";
 
 const AttendanceView = () => {
   const navigate = useNavigate();
@@ -13,6 +12,9 @@ const AttendanceView = () => {
   const [absentStudent, setAbsentStudent] = useState([]);
   const [presentStudent, setPresentStudent] = useState([]);
   const [lessonInfo, setLessonInfo] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const loadingRef = useRef(false);
 
   const { getCourseStudents } = useStudentCourse();
   const { getStudent } = useStudentHook();
@@ -20,7 +22,6 @@ const AttendanceView = () => {
 
   const absentToPresent = (student) => {
     setPresentStudent((prev) => [...prev, student]);
-
     setAbsentStudent((prev) =>
       prev.filter((s) => s.studentID !== student.studentID),
     );
@@ -28,7 +29,6 @@ const AttendanceView = () => {
 
   const presentToAbsent = (student) => {
     setAbsentStudent((prev) => [...prev, student]);
-
     setPresentStudent((prev) =>
       prev.filter((s) => s.studentID !== student.studentID),
     );
@@ -42,78 +42,94 @@ const AttendanceView = () => {
     };
 
     const success = await postAttendance(student.studentID, attendance);
-    if (!success)
+
+    if (!success) {
       console.log(
         `Student ${student.firstName} ${student.lastName} logging failed`,
       );
+    }
+
     return success;
   };
 
   const handlePostAttendances = async () => {
-    const result = await Promise.all([
-      ...presentStudent.map((student) => postAttendances(student, true)),
-      ...absentStudent.map((student) => postAttendances(student, false)),
+    const results = await Promise.all([
+      ...presentStudent.map((s) => postAttendances(s, true)),
+      ...absentStudent.map((s) => postAttendances(s, false)),
     ]);
 
-    const failedCount = (await result).filter((success) => !success).length;
+    const failedCount = results.filter((success) => !success).length;
+
     if (failedCount > 0) {
       console.log(`${failedCount} attendance posts failed`);
-      return false;
     }
-    return true;
+
+    return failedCount === 0;
   };
 
-  useEffect(() => {
-    const updateStudentList = () => {};
-  }, [presentStudent, absentStudent]);
-  useEffect(() => {
-    if (!lessonInfo.lessonId) return;
+  const fetchAttendance = async () => {
+    if (!lessonInfo.lessonId || loadingRef.current) return;
 
-    const fetchAttendance = async () => {
+    loadingRef.current = true;
+    setLoading(true);
+
+    try {
       const studentIds = await getCourseStudents(lessonInfo.courseId);
-      const allStudents = await Promise.all(
+
+      const students = await Promise.all(
         studentIds.map((id) => getStudent(id)),
       );
-      const validStudents = allStudents.filter(Boolean);
+
+      const validStudents = students.filter(Boolean);
 
       const present = [];
       const absent = [];
 
       validStudents.forEach((student) => {
         const attended = student.attendance?.some(
-          (att) => att.lessonId === lessonInfo.lessonId && att.present,
+          (att) => att.lessonId === lessonInfo.lessonId && att.present === true,
         );
-        if (attended) present.push(student);
-        else absent.push(student);
+
+        if (attended) {
+          present.push(student);
+        } else {
+          absent.push(student);
+        }
       });
 
       setPresentStudent(present);
       setAbsentStudent(absent);
-    };
+    } catch (err) {
+      console.error(err);
+    } finally {
+      loadingRef.current = false;
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!state) {
+      window.alert("How did you get here without state?");
+      return;
+    }
+
+    setLessonInfo(state);
+  }, [state]);
+
+  useEffect(() => {
+    if (!lessonInfo.lessonId) return;
 
     fetchAttendance();
+
     const interval = setInterval(fetchAttendance, 60000);
+
     return () => clearInterval(interval);
   }, [lessonInfo.lessonId]);
-  useEffect(() => {
-    const initLessonInfo = () => {
-      if (!state) {
-        window.alert("How did you get here without state?");
-        return;
-      }
-      console.log(state);
-      setLessonInfo(state);
-    };
-    initLessonInfo();
-  }, []);
 
   return (
     <div className="main-card inner-card--stack">
-      <h1>
-        {lessonInfo?.course?.name
-          ? lessonInfo?.course?.name
-          : "Placeholder name"}
-      </h1>
+      <h1>{lessonInfo?.course?.name ?? "Placeholder name"}</h1>
+
       <div
         style={{
           display: "flex",
@@ -128,17 +144,19 @@ const AttendanceView = () => {
       >
         <QRGenerator value={{ lessonId: lessonInfo.lessonId }} size={256} />
       </div>
+      <button className="btn" onClick={fetchAttendance} disabled={loading}>
+        {loading ? "Refreshing..." : "Refresh"}
+      </button>
+
       <div className="inner-card inner-card--stack">
-        <h2>Present student:</h2>
+        <h2>Present students:</h2>
+
         <div className="inner-card inner-card--wrap">
           {presentStudent.map((student) => (
             <button
-              className="btn"
               key={student.studentID}
-              id={student.studentID}
-              onClick={() => {
-                presentToAbsent(student);
-              }}
+              className="btn"
+              onClick={() => presentToAbsent(student)}
             >
               {student.firstName} {student.lastName}
             </button>
@@ -147,16 +165,14 @@ const AttendanceView = () => {
       </div>
 
       <div className="inner-card inner-card--stack">
-        <h2>Current users:</h2>
+        <h2>Absent students:</h2>
+
         <div className="inner-card inner-card--wrap">
           {absentStudent.map((student) => (
             <button
-              className="btn"
               key={student.studentID}
-              id={student.studentID}
-              onClick={() => {
-                absentToPresent(student);
-              }}
+              className="btn"
+              onClick={() => absentToPresent(student)}
             >
               {student.firstName} {student.lastName}
             </button>
@@ -169,11 +185,10 @@ const AttendanceView = () => {
         onClick={async () => {
           const ok = await handlePostAttendances();
           if (!ok) return;
-          else {
-            navigate("/courses/manage", {
-              state: { course: lessonInfo.course },
-            });
-          }
+
+          navigate("/courses/manage", {
+            state: { course: lessonInfo.course },
+          });
         }}
       >
         Stop attendance marking
