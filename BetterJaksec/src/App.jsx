@@ -17,6 +17,7 @@ import ManageLessons from "./views/user/ManageLessons";
 import { UserProvider } from "./contexts/UserContext.jsx";
 import { AdminProvider } from "./contexts/AdminContext.jsx";
 import QRScanner from "./components/QRReader.jsx";
+import "./i18n/index.js";
 
 function App() {
   return (

@@ -1,7 +1,11 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { useTranslation } from "react-i18next";
+
 
 export default function LoginForm() {
+  const { t } = useTranslation("common");
+
   const { handleLogin } = useContext(UserContext);
 
   const [email, setEmail] = useState("");
@@ -20,10 +24,10 @@ export default function LoginForm() {
 
   return (
     <form className="main-card" onSubmit={submitLogin}>
-      <h2>Login</h2>
+      <h2>{t("login")}</h2>
 
       <div className="inner-card inner-card--stack">
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">{t("email")}</label>
         <input
           id="email"
           type="text"
@@ -36,7 +40,7 @@ export default function LoginForm() {
       </div>
 
       <div className="inner-card inner-card--stack">
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">{t("password")}</label>
         <input
           id="password"
           type="password"
@@ -55,7 +59,7 @@ export default function LoginForm() {
       )}
 
       <button className="btn btn--primary" type="submit">
-        Login
+        {t("login")}
       </button>
     </form>
   );
