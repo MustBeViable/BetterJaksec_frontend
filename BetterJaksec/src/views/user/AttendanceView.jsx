@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import useStudentCourse from "../../hooks/StudentCourseHook";
 import useStudentHook from "../../hooks/StudentHooks";
 import useAttendanceHook from "../../hooks/AttendanceHook";
 import QRGenerator from "../../components/QRGenerator.jsx";
 
 const AttendanceView = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const { state } = useLocation();
 
@@ -76,9 +78,7 @@ const AttendanceView = () => {
     try {
       const studentIds = await getCourseStudents(lessonInfo.courseId);
 
-      const students = await Promise.all(
-        studentIds.map((id) => getStudent(id)),
-      );
+      const students = await Promise.all(studentIds.map((id) => getStudent(id)));
 
       const validStudents = students.filter(Boolean);
 
@@ -109,12 +109,12 @@ const AttendanceView = () => {
 
   useEffect(() => {
     if (!state) {
-      window.alert("How did you get here without state?");
+      window.alert(t("missingStateError"));
       return;
     }
 
     setLessonInfo(state);
-  }, [state]);
+  }, [state, t]);
 
   useEffect(() => {
     if (!lessonInfo.lessonId) return;
@@ -128,7 +128,7 @@ const AttendanceView = () => {
 
   return (
     <div className="main-card inner-card--stack">
-      <h1>{lessonInfo?.course?.name ?? "Placeholder name"}</h1>
+      <h1>{lessonInfo?.course?.name ?? t("placeholderName")}</h1>
 
       <div
         style={{
@@ -145,11 +145,11 @@ const AttendanceView = () => {
         <QRGenerator value={{ lessonId: lessonInfo.lessonId }} size={256} />
       </div>
       <button className="btn" onClick={fetchAttendance} disabled={loading}>
-        {loading ? "Refreshing..." : "Refresh"}
+        {loading ? t("refreshing") : t("refresh")}
       </button>
 
       <div className="inner-card inner-card--stack">
-        <h2>Present students:</h2>
+        <h2>{t("presentStudents")}</h2>
 
         <div className="inner-card inner-card--wrap">
           {presentStudent.map((student) => (
@@ -165,7 +165,7 @@ const AttendanceView = () => {
       </div>
 
       <div className="inner-card inner-card--stack">
-        <h2>Absent students:</h2>
+        <h2>{t("absentStudents")}</h2>
 
         <div className="inner-card inner-card--wrap">
           {absentStudent.map((student) => (
@@ -191,7 +191,7 @@ const AttendanceView = () => {
           });
         }}
       >
-        Stop attendance marking
+        {t("stopAttendanceMarking")}
       </button>
     </div>
   );

@@ -1,17 +1,21 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { UserContext } from "../../contexts/UserContext";
+import LanguageSelector from "../../components/LanguageSwitcher.jsx";
 
 const MainScreen = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const { handleLogout, user } = useContext(UserContext);
 
   return (
     <div className="main-card">
-      <h1>MainScreen</h1>
+      <LanguageSelector></LanguageSelector>
+      <h1>{t("mainScreen")}</h1>
       <div className="inner-card inner-card--wrap">
         <button className="btn" onClick={() => navigate("/profile_page")}>
-          Profile
+          {t("profile")}
         </button>
 
         {user?.role === "student" && (
@@ -20,11 +24,11 @@ const MainScreen = () => {
               className="btn"
               onClick={() => navigate("/attendance_tracking")}
             >
-              Courses and attendance stats
+              {t("coursesAndAttendanceStats")}
             </button>
 
             <button className="btn" onClick={() => navigate("/readqr")}>
-              Read QR
+              {t("readQr")}
             </button>
           </>
         )}
@@ -32,19 +36,19 @@ const MainScreen = () => {
         {user?.role === "teacher" && (
           <>
             <button className="btn" onClick={() => navigate("/courses")}>
-              Courses
+              {t("courses")}
             </button>
             <button
               className="btn"
               onClick={() => navigate("/admin_attendance_tracking")}
             >
-              Attendance Stats
+              {t("attendanceStats")}
             </button>
           </>
         )}
 
         <button className="btn btn--danger" onClick={handleLogout}>
-          Log out
+          {t("logOut")}
         </button>
       </div>
     </div>

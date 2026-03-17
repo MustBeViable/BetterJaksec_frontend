@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const ClassAttendanceStatsAdmin = ({ students, totalClasses }) => {
+  const { t } = useTranslation("common");
   let totalAttended = 0;
 
   students.forEach((student) => {
@@ -30,7 +32,7 @@ const ClassAttendanceStatsAdmin = ({ students, totalClasses }) => {
       </div>
 
       <div className="inner-card">
-        <p>Average: {averageAttendance.toFixed(1)}%</p>
+        <p>{t("average")} {averageAttendance.toFixed(1)}%</p>
       </div>
     </div>
   );

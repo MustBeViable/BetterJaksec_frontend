@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import useStudentHook from "../../hooks/StudentHooks";
 import useTeacherHook from "../../hooks/TeacherHooks";
 
 const UserManageCard = ({ user, setSelectedUser, setChange }) => {
+  const { t } = useTranslation("common");
   const [role, setRole] = useState(user.isAdmin ? "admin" : "teacher");
   const { deleteStudent } = useStudentHook();
   const { putTeacher, deleteTeacher } = useTeacherHook();
@@ -28,28 +30,28 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
   const deleteUser = async () => {
     if (user.teacherID) return deleteTeacher(user.teacherID);
     if (user.studentID) return deleteStudent(user.studentID);
-    window.alert("not a student or teacher");
+    window.alert(t("notStudentOrTeacher"));
     return false;
   };
 
   return (
     <div className="inner-card inner-card--stack">
-      <h1>UserManageCard</h1>
+      <h1>{t("userManageCard")}</h1>
 
       <div className="inner-card">
         <table>
           <thead>
             <tr>
-              <th>User info</th>
+              <th>{t("userInfo")}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>ID:</td>
+              <td>{t("id")}</td>
               <td>{user.studentID ?? user.teacherID}</td>
             </tr>
             <tr>
-              <td>Name:</td>
+              <td>{t("name")}</td>
               <td>
                 {user.firstName} {user.lastName}
               </td>
@@ -57,15 +59,15 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
 
             {user.teacherID && (
               <tr>
-                <td>Change role:</td>
+                <td>{t("changeRole")}</td>
                 <td>
                   <select
                     id="role-select"
                     value={role}
                     onChange={(evt) => setRole(evt.target.value)}
                   >
-                    <option value="admin">Admin</option>
-                    <option value="teacher">Teacher</option>
+                    <option value="admin">{t("admin")}</option>
+                    <option value="teacher">{t("teacher")}</option>
                   </select>
                 </td>
               </tr>
@@ -73,8 +75,8 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
 
             {user.studentID && (
               <tr>
-                <td>Role:</td>
-                <td>Student</td>
+                <td>{t("role")}</td>
+                <td>{t("student")}</td>
               </tr>
             )}
           </tbody>
@@ -83,33 +85,33 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
 
       <div className="inner-card inner-card--row">
         <button className="btn" onClick={() => setSelectedUser(null)}>
-          Return
+          {t("return")}
         </button>
 
         <button
           className="btn btn--primary"
           onClick={async () => {
             const ok = await modifyUserRole();
-            if (!ok) window.alert("Did not update");
+            if (!ok) window.alert(t("didNotUpdate"));
             setChange(true);
             setSelectedUser(null);
           }}
         >
-          Save
+          {t("save")}
         </button>
 
         <button
           className="btn btn--danger"
           onClick={async () => {
             const ok = await deleteUser();
-            if (!ok) window.alert("Deletion did not succeed");
+            if (!ok) window.alert(t("deletionDidNotSucceed"));
             else {
               setChange(true);
               setSelectedUser(null);
             }
           }}
         >
-          Delete user
+          {t("deleteUser")}
         </button>
       </div>
     </div>

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 const languages = [
   { code: "en", label: "English" },
   { code: "fi", label: "Suomi" },
+  { code: "de", label: "Deutsch" },
+  { code: "jp", label: "Japanese" },
 ];
 
 export default function LanguageSelector() {

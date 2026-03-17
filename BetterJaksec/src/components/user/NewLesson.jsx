@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import useLessonHook from "../../hooks/LessonHooks";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import useLessonHook from "../../hooks/LessonHooks";
 
 const NewLesson = ({
   course,
@@ -12,6 +13,7 @@ const NewLesson = ({
   onCreated,
   onDeleted,
 }) => {
+  const { t } = useTranslation("common");
   const [lessonName, setLessonName] = useState("");
   const [lessonDate, setLessonDate] = useState("");
 
@@ -96,12 +98,10 @@ const NewLesson = ({
 
   return (
     <div className="inner-card inner-card--stack">
-      <h1>New lesson</h1>
+      <h1>{t("newLesson")}</h1>
 
       <label>
-        <p>
-        Lesson name:
-        </p>
+        <p>{t("lessonName")}</p>
         <input
           type="text"
           value={lessonName}
@@ -114,9 +114,7 @@ const NewLesson = ({
       </label>
 
       <label>
-        <p>
-        Lesson date:
-        </p>
+        <p>{t("lessonDate")}</p>
         <input
           type="date"
           value={lessonDate}
@@ -134,21 +132,21 @@ const NewLesson = ({
           const nameOk = lessonName.trim().length > 0;
           const dateOk = lessonDate.trim().length > 0;
 
-          setNameError(nameOk ? "" : "Required");
-          setDateError(dateOk ? "" : "Required");
+          setNameError(nameOk ? "" : t("required"));
+          setDateError(dateOk ? "" : t("required"));
 
           if (!nameOk || !dateOk) return;
 
           const ok = await newLesson();
           if (!ok) {
-            window.alert("Request failed");
+            window.alert(t("requestFailed"));
             return;
           }
           setIsAddLessonOpen(false);
           setSelectedLesson(null);
         }}
       >
-        Save
+        {t("save")}
       </button>
 
       <button
@@ -158,7 +156,7 @@ const NewLesson = ({
           setSelectedLesson(null);
         }}
       >
-        Cancel
+        {t("cancel")}
       </button>
 
       {selectedLesson && (
@@ -168,14 +166,14 @@ const NewLesson = ({
             onClick={async () => {
               const ok = await removeLesson();
               if (!ok) {
-                window.alert("Deletion failed");
+                window.alert(t("deletionFailed"));
                 return;
               }
               setIsAddLessonOpen(false);
               setSelectedLesson(null);
             }}
           >
-            Delete lesson
+            {t("deleteLesson")}
           </button>
           <button
             className="btn"
@@ -191,7 +189,7 @@ const NewLesson = ({
               });
             }}
           >
-            Start lesson tracking
+            {t("startLessonTracking")}
           </button>
         </div>
       )}

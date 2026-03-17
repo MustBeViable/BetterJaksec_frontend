@@ -1,9 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { UserContext } from "../../contexts/UserContext";
 import { AdminContext } from "../../contexts/AdminContext";
+import LanguageSelector from "../../components/LanguageSwitcher.jsx";
 
 const AdminView = () => {
+  const { t } = useTranslation("common");
   const { handleLogout } = useContext(UserContext);
   const { checkPermission } = useContext(AdminContext);
 
@@ -16,17 +19,18 @@ const AdminView = () => {
   return (
     <div className="main-card">
       <nav className="inner-card inner-card--wrap">
+        <LanguageSelector></LanguageSelector>
         <Link className="btn" to="/admin">
-          Main
+          {t("main")}
         </Link>
         <Link className="btn" to="/admin/profile">
-          Profile
+          {t("profile")}
         </Link>
         <Link className="btn" to="/admin/users">
-          Manage users
+          {t("manageUsers")}
         </Link>
         <Link className="btn" to="/admin/admin_attendance_tracking">
-          Attendance tracking view
+          {t("attendanceTrackingView")}
         </Link>
         <button
           className="btn btn--danger"
@@ -34,7 +38,7 @@ const AdminView = () => {
             handleLogout();
           }}
         >
-          Log out
+          {t("logOut")}
         </button>
       </nav>
       <Outlet />

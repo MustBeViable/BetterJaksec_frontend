@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import useAttendanceHook from "../hooks/AttendanceHook";
 import { UserContext } from "../contexts/UserContext";
 
 export default function QRScanner() {
+  const { t } = useTranslation("common");
   const { postAttendance } = useAttendanceHook();
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
@@ -29,10 +31,10 @@ export default function QRScanner() {
       const success = await postAttendance(user.id, reqBody);
       scanner.clear().catch((err) => console.error(err));
       if (success) {
-        setScanResult("Attendance recorded successfully! It can take upto a minute to show up on the screen");
+        setScanResult(t("attendanceRecordedSuccessfully"));
         setScanned(true);
       } else {
-        setScanResult("Failed to record attendance. Try again.");
+        setScanResult(t("failedToRecordAttendance"));
         setScanned(true);
       }
     };
@@ -42,17 +44,14 @@ export default function QRScanner() {
     return () => {
       scanner.clear().catch(() => {});
     };
-  }, [user, postAttendance, scanned]);
+  }, [user, postAttendance, scanned, t]);
 
   if (scanned) {
     return (
       <div className="scanner-result">
         <p>{scanResult}</p>
-        <button
-          className="btn btn--primary"
-          onClick={() => navigate("/")}
-        >
-          Go Back
+        <button className="btn btn--primary" onClick={() => navigate("/")}>
+          {t("goBack")}
         </button>
       </div>
     );

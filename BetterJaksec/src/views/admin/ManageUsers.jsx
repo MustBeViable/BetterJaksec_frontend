@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import UserManageButtonAdmin from "../../components/admin/UserManageButtonAdmin";
 import UserManageCard from "../../components/admin/UserManageCard";
 import useTeacherHook from "../../hooks/TeacherHooks";
 import useStudentHook from "../../hooks/StudentHooks";
 
 const ManageUsers = () => {
-  const {getTeacher} = useTeacherHook();
-  const {getStudent} = useStudentHook();
+  const { t } = useTranslation("common");
+  const { getTeacher } = useTeacherHook();
+  const { getStudent } = useStudentHook();
   const navigate = useNavigate();
   const [userList, setUserList] = useState([]);
   const [change, setChange] = useState(false);
@@ -15,8 +17,8 @@ const ManageUsers = () => {
   const [keyword, setKeyword] = useState("");
   const [selectedUser, setSelectedUser] = useState();
 
-  const filterList = (list, keyword) => {
-    const word = keyword.trim().toLowerCase();
+  const filterList = (list, searchKeyword) => {
+    const word = searchKeyword.trim().toLowerCase();
     if (!word) return list;
     return list.filter((user) => user.name.toLowerCase().includes(word));
   };
@@ -26,15 +28,15 @@ const ManageUsers = () => {
       const teachers = await getTeacher();
       const students = await getStudent();
       if (!teachers && !students) {
-        window.alert("No teacher/student found")
+        window.alert(t("noTeacherStudentFound"));
       }
-      const combined = [...teachers, ...students]
+      const combined = [...(teachers || []), ...(students || [])];
       setUserList(combined);
       setFilteredUserList(combined);
       if (change) setChange(false);
     };
     handleList();
-  }, [change]);
+  }, [change, getTeacher, getStudent, t]);
 
   useEffect(() => {
     const handleFiltering = () => {
@@ -42,21 +44,32 @@ const ManageUsers = () => {
       setFilteredUserList(newArray);
     };
     handleFiltering();
-  }, [keyword]);
+  }, [keyword, userList]);
 
   useEffect(() => {}, [selectedUser]);
 
   return (
     <div className="inner-card inner-card--stack">
       {selectedUser && (
-        <UserManageCard user={selectedUser} setSelectedUser={setSelectedUser} setChange={setChange} />
+        <UserManageCard
+          user={selectedUser}
+          setSelectedUser={setSelectedUser}
+          setChange={setChange}
+        />
       )}
 
       {!selectedUser && (
         <>
-          <h1>ManageUsers</h1>
-          <button className="btn btn--primary" onClick={() => {navigate("/admin/new_user")}}>Add users</button>
-          <label htmlFor="usersearch">Search by name:</label>
+          <h1>{t("manageUsersTitle")}</h1>
+          <button
+            className="btn btn--primary"
+            onClick={() => {
+              navigate("/admin/new_user");
+            }}
+          >
+            {t("addUser")}
+          </button>
+          <label htmlFor="usersearch">{t("searchByName")}</label>
           <input
             type="text"
             id="usersearch"

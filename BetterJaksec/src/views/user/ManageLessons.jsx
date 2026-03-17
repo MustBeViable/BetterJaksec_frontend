@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import NewLesson from "../../components/user/NewLesson";
 import useLessonHook from "../../hooks/LessonHooks";
 
 const ManageLessons = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const { state } = useLocation();
 
@@ -56,7 +58,7 @@ const ManageLessons = () => {
     <div className="main-card">
       <div className="inner-card inner-card--stack">
         <div className="inner-card inner-card--row">
-          <h1>Manage lessons</h1>
+          <h1>{t("manageLessons")}</h1>
           <button
             className="btn"
             type="button"
@@ -66,7 +68,7 @@ const ManageLessons = () => {
               })
             }
           >
-            Return
+            {t("return")}
           </button>
         </div>
 
@@ -80,12 +82,12 @@ const ManageLessons = () => {
                 setIsAddLessonOpen(true);
               }}
             >
-              Add lesson
+              {t("addLesson")}
             </button>
           </div>
 
           <div className="inner-card inner-card--stack" style={{ flex: 1 }}>
-            <h2>Lessons:</h2>
+            <h2>{t("lessons")}</h2>
 
             <div className="inner-card inner-card--stack">
               {lessonList?.map((lesson) => (
@@ -102,7 +104,7 @@ const ManageLessons = () => {
                 </button>
               ))}
 
-              {lessonList.length === 0 && <div>No lessons</div>}
+              {lessonList.length === 0 && <div>{t("noLessons")}</div>}
             </div>
           </div>
         </div>
@@ -126,7 +128,7 @@ const ManageLessons = () => {
         >
           <div
             className="inner-card"
-            style={{ background: "#fff", padding: "24px", borderRadius: "8px" }}
+            style={{ background: "#fff", padding: "24px", borderRadius: "12px" }}
             onClick={(e) => e.stopPropagation()}
           >
             <NewLesson
@@ -135,9 +137,9 @@ const ManageLessons = () => {
               setIsAddLessonOpen={setIsAddLessonOpen}
               selectedLesson={selectedLesson}
               setSelectedLesson={setSelectedLesson}
-              onUpdated={() => setRefreshKey((k) => k + 1)}
-              onCreated={() => setRefreshKey((k) => k + 1)}
-              onDeleted={() => setRefreshKey((k) => k + 1)}
+              onCreated={() => setRefreshKey((prev) => prev + 1)}
+              onUpdated={() => setRefreshKey((prev) => prev + 1)}
+              onDeleted={() => setRefreshKey((prev) => prev + 1)}
             />
           </div>
         </div>

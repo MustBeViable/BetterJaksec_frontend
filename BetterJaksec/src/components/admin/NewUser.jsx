@@ -1,72 +1,49 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import useStudentHook from "../../hooks/StudentHooks";
 import useTeacherHook from "../../hooks/TeacherHooks";
-import useEmailHook from "../../hooks/EmailHooks";
 
 const NewUser = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
-  const schoolEmail = "metropolia.fi";
-  const [newEmailChange, setNewEmailChange] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [role, setRole] = useState("student");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("teacher");
+  const [newEmailChange, setNewEmailChange] = useState(false);
 
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [emailError, setEmailError] = useState("");
 
+  const schoolEmail = "school.com";
+
   const { postStudent } = useStudentHook();
   const { postTeacher } = useTeacherHook();
-  const { checkEmail } = useEmailHook();
 
   const handlePost = async () => {
-    let emailAvailable = await checkEmail(email);
-    if (!emailAvailable) return console.log("API connection error");
-    if (!emailAvailable.isAvailable) {
-      let newEmail;
-      let index = 1;
-      do {
-        newEmail = `${firstName}${index}.${lastName}@${schoolEmail}`;
-        emailAvailable = await checkEmail(newEmail);
-        if (emailAvailable.isAvailable) {
-          setEmail(newEmail);
-          setNewEmailChange((prev) => !prev);
-          window.alert(`User new email: ${newEmail}`);
-          return;
-        }
-      } while (!emailAvailable.isAvailable);
+    if (role === "student") {
+      return await postStudent({ firstName, lastName, email });
     }
-    if (role === "teacher" || role === "admin") {
-      const teacher = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        isAdmin: role === "admin" ? true : false,
-      };
-      const success = await postTeacher(teacher);
-      return success;
-    }
-    const student = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-    };
-    const success = await postStudent(student);
-    return success;
+    return await postTeacher({
+      firstName,
+      lastName,
+      email,
+      isAdmin: role === "admin",
+    });
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (evt) => {
+    evt.preventDefault();
 
     const firstOk = firstName.trim().length > 0;
     const lastOk = lastName.trim().length > 0;
     const emailOk = email.trim().length > 0;
 
-    setFirstNameError(firstOk ? "" : "Required");
-    setLastNameError(lastOk ? "" : "Required");
-    setEmailError(emailOk ? "" : "Required");
+    setFirstNameError(firstOk ? "" : t("required"));
+    setLastNameError(lastOk ? "" : t("required"));
+    setEmailError(emailOk ? "" : t("required"));
 
     if (!firstOk || !lastOk || !emailOk) return;
 
@@ -86,11 +63,11 @@ const NewUser = () => {
 
   return (
     <div className="main-card">
-      <h1>New user</h1>
+      <h1>{t("newUser")}</h1>
 
       <form onSubmit={onSubmit} className="inner-card inner-card--stack">
         <div className="inner-card inner-card--stack">
-          <label htmlFor="newUserFirstName">First name: </label>
+          <label htmlFor="newUserFirstName">{t("firstName")}</label>
           <input
             type="text"
             id="newUserFirstName"
@@ -104,7 +81,7 @@ const NewUser = () => {
             <p style={{ color: "var(--danger)" }}>{firstNameError}</p>
           )}
 
-          <label htmlFor="newUserLastName">Last name: </label>
+          <label htmlFor="newUserLastName">{t("lastName")}</label>
           <input
             type="text"
             id="newUserLastName"
@@ -118,25 +95,26 @@ const NewUser = () => {
             <p style={{ color: "var(--danger)" }}>{lastNameError}</p>
           )}
 
-          <label htmlFor="role">Select role: </label>
+          <label htmlFor="role">{t("selectRole")}</label>
           <select
             name="role"
             id="role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
           >
-            <option value="teacher">Teacher</option>
-            <option value="student">Student</option>
-            <option value="admin">Admin</option>
+            <option value="teacher">{t("teacher")}</option>
+            <option value="student">{t("student")}</option>
+            <option value="admin">{t("admin")}</option>
           </select>
 
-          <label htmlFor="newUserEmail">Generated email: </label>
+          <label htmlFor="newUserEmail">{t("generatedEmail")}</label>
           <input
             type="email"
             id="newUserEmail"
             value={email}
             onChange={(evt) => {
               setEmail(evt.target.value);
+              setNewEmailChange((prev) => !prev);
               if (emailError) setEmailError("");
             }}
           />
@@ -145,14 +123,14 @@ const NewUser = () => {
 
         <div className="inner-card inner-card--row">
           <button className="btn btn--primary" type="submit">
-            Add user
+            {t("addUser")}
           </button>
           <button
             className="btn"
             type="button"
             onClick={() => navigate("/admin/users")}
           >
-            Return
+            {t("return")}
           </button>
         </div>
       </form>

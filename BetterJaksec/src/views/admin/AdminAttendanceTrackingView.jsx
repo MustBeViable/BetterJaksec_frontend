@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import CourseList from "../../components/CourseList";
 import ClassAttendanceStatsAdmin from "../../components/admin/ClassAttendanceStatsAdmin";
 import useCourseHook from "../../hooks/CourseHook";
@@ -8,6 +9,7 @@ import useStudentHook from "../../hooks/StudentHooks";
 import { useUser } from "../../hooks/AuthHooks";
 
 const AdminAttendanceTrackingView = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const { getCourse } = useCourseHook();
   const { getCourseStudents } = useStudentCourseHook();
@@ -61,7 +63,7 @@ const AdminAttendanceTrackingView = () => {
 
           const computedStudents = studentData.map((student) => {
             const attendanceForCourse = (student.attendance || []).filter((a) =>
-              lessons.includes(a.lessonId)
+              lessons.includes(a.lessonId),
             );
 
             return {
@@ -72,7 +74,6 @@ const AdminAttendanceTrackingView = () => {
           });
 
           setStudents(computedStudents);
-
         } else if (userRole === "admin") {
           studentData = await getStudent();
 
@@ -87,7 +88,6 @@ const AdminAttendanceTrackingView = () => {
           });
 
           setStudents(computedStudents);
-
         } else {
           setStudents([]);
         }
@@ -100,9 +100,9 @@ const AdminAttendanceTrackingView = () => {
     if (!loading && userRole) {
       fetchStudents();
     }
-  }, [selectedCourse, loading, userRole]);
+  }, [selectedCourse, loading, userRole, getCourseStudents, getStudent]);
 
-  if (loading || !userRole) return <div>Loading...</div>;
+  if (loading || !userRole) return <div>{t("loading")}</div>;
 
   const totalClasses =
     selectedCourse?.lessonIds?.length ||
@@ -126,11 +126,11 @@ const AdminAttendanceTrackingView = () => {
             marginBottom: "5px",
           }}
         >
-          <h3 style={{ margin: 0 }}>Courses</h3>
+          <h3 style={{ margin: 0 }}>{t("courses")}</h3>
           {userRole === "teacher" && (
-          <button className="btn" onClick={() => navigate("/")}>
-            Return
-          </button>
+            <button className="btn" onClick={() => navigate("/")}>
+              {t("return")}
+            </button>
           )}
         </div>
 
@@ -154,10 +154,10 @@ const AdminAttendanceTrackingView = () => {
       >
         <h3 style={{ marginTop: 0, marginBottom: "10px" }}>
           {selectedCourse
-            ? `${selectedCourse.name} Stats`
+            ? `${selectedCourse.name} ${t("attendanceStats")}`
             : userRole === "admin"
-            ? "All Courses Stats"
-            : "Select a Course"}
+              ? t("allCoursesStats")
+              : t("selectACourse")}
         </h3>
 
         <div style={{ flex: 1, overflowY: "auto" }}>
