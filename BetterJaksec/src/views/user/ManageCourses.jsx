@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import AddUserCourse from "../../components/user/AddUserCourse";
 import useStudentHooks from "../../hooks/StudentHooks";
 import useCourseHooks from "../../hooks/CourseHook";
@@ -7,6 +8,7 @@ import useStudentCourse from "../../hooks/StudentCourseHook";
 import { UserContext } from "../../contexts/UserContext";
 
 const ManageCourses = () => {
+  const { t } = useTranslation("common");
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -94,133 +96,123 @@ const ManageCourses = () => {
         return;
       }
 
-      const students = await Promise.all(
-        studentIds.map((id) => getStudent(id)),
-      );
+      const students = await Promise.all(studentIds.map((id) => getStudent(id)));
       setCourseStudents(students.filter(Boolean));
     };
 
     initialStudents();
-  }, [course, isAddUsersOpen, removeModal, refresh]);
+  }, [course, isAddUsersOpen, removeModal, refresh, getCourseStudents, getStudent]);
 
   return (
-    <div className="main-card inner-card--stack">
-      <div className="inner-card inner-card--row">
-        <h1>{course?.name ? course.name : "New course:"}</h1>
-        <button
-          className="btn"
-          type="button"
-          onClick={() => {
-            navigate("/courses", {
-              state: null,
-            });
-          }}
-        >
-          Return
-        </button>
-      </div>
-
-      <div className="inner-card inner-card--row">
-        <div className="inner-card inner-card--stack">
-          <div className="inner-card inner-card--stack">
-            <label htmlFor="courseName">Course name:</label>
-            <input
-              id="courseName"
-              type="text"
-              value={courseName}
-              onChange={(e) => {
-                setCourseName(e.target.value);
-                if (courseNameError) setCourseNameError("");
-              }}
-            />
-            {courseNameError && <p style={{ color: "var(--danger)" }}>{courseNameError}</p>}
-          </div>
-
-          {course && (
-            <>
-              <button className="btn" type="button" onClick={() => setIsAddUsersOpen(true)}>
-                Add users to the course
-              </button>
-
-              <button
-                className="btn"
-                type="button"
-                onClick={() => {
-                  navigate("/courses/manage/manage_lessons", {
-                    state: { course },
-                  });
-                }}
-              >
-                Manage lessons
-              </button>
-
-              <button
-                className="btn btn--primary"
-                type="button"
-                onClick={async () => {
-                  const nameOk = courseName.trim().length > 0;
-                  setCourseNameError(nameOk ? "" : "Required");
-                  if (!nameOk) return;
-
-                  const ok = await updateCourse();
-                  if (!ok) window.alert("Update failed");
-                  else {
-                    navigate("/courses");
-                  }
-                }}
-              >
-                Update course
-              </button>
-
-              <button
-                className="btn btn--danger"
-                type="button"
-                onClick={async () => {
-                  const ok = await eliminateCourse();
-                  if (!ok) window.alert("Deletion failed");
-                  else {
-                    navigate("/courses");
-                  }
-                }}
-              >
-                End course
-              </button>
-            </>
-          )}
-
-          {!course && (
-            <button
-              className="btn btn--primary"
-              type="button"
-              onClick={async () => {
-                const nameOk = courseName.trim().length > 0;
-                setCourseNameError(nameOk ? "" : "Required");
-                if (!nameOk) return;
-
-                const ok = await createCourse();
-                if (!ok) window.alert("Creation failed");
-                else {
-                  navigate("/courses");
-                }
-              }}
-            >
-              Create course
-            </button>
-          )}
+    <div className="main-card">
+      <div className="inner-card inner-card--stack">
+        <div className="inner-card inner-card--row">
+          <button
+            className="btn"
+            onClick={() => {
+              navigate("/courses");
+            }}
+          >
+            {t("return")}
+          </button>
         </div>
 
         <div className="inner-card inner-card--stack">
-          <h2>Current users:</h2>
+          <label htmlFor="coursename">{t("courseName")}</label>
+          <input
+            id="coursename"
+            value={courseName}
+            onChange={(evt) => {
+              setCourseName(evt.target.value);
+              if (courseNameError) setCourseNameError("");
+            }}
+          />
+          {courseNameError && (
+            <p style={{ color: "var(--danger)" }}>{courseNameError}</p>
+          )}
+        </div>
+
+        {course && (
+          <div className="inner-card inner-card--row">
+            <button
+              className="btn"
+              onClick={() => {
+                setIsAddUsersOpen(true);
+              }}
+            >
+              {t("addUsersToCourse")}
+            </button>
+
+            <button
+              className="btn"
+              onClick={() => {
+                navigate("/courses/lessons", { state: { course } });
+              }}
+            >
+              {t("manageLessons")}
+            </button>
+
+            <button
+              className="btn btn--primary"
+              onClick={async () => {
+                const courseNameOk = courseName.trim().length > 0;
+                setCourseNameError(courseNameOk ? "" : t("required"));
+                if (!courseNameOk) return;
+                const ok = await updateCourse();
+                if (!ok) {
+                  window.alert(t("updateFailed"));
+                }
+              }}
+            >
+              {t("updateCourse")}
+            </button>
+
+            <button
+              className="btn btn--danger"
+              onClick={async () => {
+                const ok = await eliminateCourse();
+                if (!ok) {
+                  window.alert(t("deletionFailed"));
+                  return;
+                }
+                navigate("/courses");
+              }}
+            >
+              {t("endCourse")}
+            </button>
+          </div>
+        )}
+
+        {!course && (
+          <button
+            className="btn btn--primary"
+            onClick={async () => {
+              const courseNameOk = courseName.trim().length > 0;
+              setCourseNameError(courseNameOk ? "" : t("required"));
+              if (!courseNameOk) return;
+              const ok = await createCourse();
+              if (!ok) {
+                window.alert(t("creationFailed"));
+                return;
+              }
+              navigate("/courses");
+            }}
+          >
+            {t("createCourse")}
+          </button>
+        )}
+
+        <div className="inner-card inner-card--stack">
+          <h2>{t("currentUsers")}</h2>
+
           <div className="inner-card inner-card--wrap">
             {courseStudents?.map((student) => (
               <button
-                className="btn"
-                type="button"
                 key={student.studentID}
-                id={student.studentID}
+                className="btn"
                 onClick={() => {
-                  setRemoveModal(true);
                   setRemoveStudent(student);
+                  setRemoveModal(true);
                 }}
               >
                 {student.firstName} {student.lastName}
@@ -230,64 +222,42 @@ const ManageCourses = () => {
         </div>
       </div>
 
-      {isAddUsersOpen && (
-        <div
-          className="inner-card"
-          style={{
-            position: "fixed",
-            inset: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0,0,0,0.5)",
-          }}
-          onClick={() => setIsAddUsersOpen(false)}
-        >
-          <div
-            className="inner-card"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <AddUserCourse
-              setIsAddUserOpen={setIsAddUsersOpen}
-              course={state?.course}
-              onClose={() => setIsAddUsersOpen(false)}
-              setRefresh={setRefresh}
-            />
-          </div>
-        </div>
-      )}
-
       {removeModal && (
-        <div className="inner-card inner-card--stack">
-          <h3>
-            Do you want to remove user {removeStudet.firstName}{" "}
-            {removeStudet.lastName} from the course?
-          </h3>
+        <div className="main-card">
+          <p>
+            {t("removeUserFromCourse", {
+              firstName: removeStudet.firstName,
+              lastName: removeStudet.lastName,
+            })}
+          </p>
           <div className="inner-card inner-card--row">
             <button
               className="btn btn--danger"
               onClick={async () => {
                 const ok = await eliminateStudent(removeStudet.studentID);
-                if (!ok) window.alert("sum ting wong");
-                if (ok) {
-                  setRemoveStudent(null);
-                  setRemoveModal(false);
+                if (!ok) {
+                  window.alert(t("deletionFailed"));
+                  return;
                 }
-              }}
-            >
-              Yes
-            </button>
-            <button
-              className="btn"
-              onClick={() => {
                 setRemoveModal(false);
-                setRemoveStudent(null);
+                setRefresh((prev) => !prev);
               }}
             >
-              No
+              {t("yes")}
+            </button>
+            <button className="btn" onClick={() => setRemoveModal(false)}>
+              {t("no")}
             </button>
           </div>
         </div>
+      )}
+
+      {isAddUsersOpen && (
+        <AddUserCourse
+          setIsAddUserOpen={setIsAddUsersOpen}
+          course={course}
+          setRefresh={setRefresh}
+        />
       )}
     </div>
   );

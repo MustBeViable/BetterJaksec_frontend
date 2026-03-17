@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import useCourseHook from "../../hooks/CourseHook";
 
 const CoursesView = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const { getCourse } = useCourseHook();
@@ -19,18 +21,18 @@ const CoursesView = () => {
     <div className="main-card">
       <div className="inner-card inner-card--stack">
         <div className="inner-card inner-card--row">
-          <h1>Courses</h1>
+          <h1>{t("courses")}</h1>
           <button
             className="btn"
             onClick={() => {
               navigate("/");
             }}
           >
-            Return
+            {t("return")}
           </button>
         </div>
 
-        <h2>List of courses:</h2>
+        <h2>{t("listOfCourses")}</h2>
 
         <div className="inner-card inner-card--stack">
           {courses?.map((course) => (
@@ -55,7 +57,7 @@ const CoursesView = () => {
               navigate("/courses/manage");
             }}
           >
-            Add new course
+            {t("addNewCourse")}
           </button>
         </div>
       </div>

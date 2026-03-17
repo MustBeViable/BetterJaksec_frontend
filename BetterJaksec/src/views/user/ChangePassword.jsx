@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useUser } from "../../hooks/AuthHooks";
 import useStudentHook from "../../hooks/StudentHooks";
 import useTeacherHook from "../../hooks/TeacherHooks";
 
 const ChangePasswordPage = () => {
+  const { t } = useTranslation("common");
   const navigate = useNavigate();
   const { getUserByToken } = useUser();
   const { putStudent } = useStudentHook();
@@ -41,7 +43,7 @@ const ChangePasswordPage = () => {
 
   const handleConfirm = async () => {
     if (password !== confirmPassword) {
-      setError("Passwords do not match!");
+      setError(t("passwordsDoNotMatch"));
       return;
     }
 
@@ -69,27 +71,27 @@ const ChangePasswordPage = () => {
       }
     } catch (err) {
       console.error("Error updating password:", err);
-      setError("Failed to change password. Try again.");
+      setError(t("failedToChangePassword"));
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>{t("loading")}</div>;
 
   return (
     <div className="main-card">
       <div className="inner-card inner-card--stack">
-        <h2>Change Password</h2>
+        <h2>{t("changePassword")}</h2>
 
         <input
           type="password"
-          placeholder="New password"
+          placeholder={t("newPassword")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
         <input
           type="password"
-          placeholder="Confirm new password"
+          placeholder={t("confirmNewPassword")}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
@@ -98,10 +100,10 @@ const ChangePasswordPage = () => {
 
         <div className="inner-card inner-card--row">
           <button className="btn" onClick={handleCancel}>
-            Cancel
+            {t("cancel")}
           </button>
           <button className="btn btn--primary" onClick={handleConfirm}>
-            Confirm
+            {t("confirm")}
           </button>
         </div>
       </div>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import useStudentHook from "../../hooks/StudentHooks";
 import useStudentCourse from "../../hooks/StudentCourseHook";
 
 const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
+  const { t } = useTranslation("common");
   const gradeOptions = ["all", "grade level1", "grade level2", "grade level3"];
 
   const [search, setSearch] = useState("");
@@ -36,7 +38,6 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
     );
   };
 
-
   const handleStudentUpdate = async () => {
     const newIds = [...selectedIds].filter((id) => !alreadyInCourse.has(id));
 
@@ -56,12 +57,12 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
   };
 
   useEffect(() => {
-    const loading = () => {
-      if (submit) setLoading("loading...");
+    const loadingState = () => {
+      if (submit) setLoading(t("loading"));
       if (!submit) setLoading("");
     };
-    loading();
-  }, [submit]);
+    loadingState();
+  }, [submit, t]);
 
   useEffect(() => {
     const sortStudentList = () => {
@@ -94,7 +95,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
       if (!students) return;
       setStudentList(students);
       setVisibleStudentList(students);
-      const alreadyInCourse = new Set(
+      const alreadyInCourseSet = new Set(
         students
           .filter(
             (student) =>
@@ -103,8 +104,8 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
           )
           .map((student) => student.studentID),
       );
-      setSelectedIds(alreadyInCourse);
-      setAlreadyInCourse(alreadyInCourse);
+      setSelectedIds(alreadyInCourseSet);
+      setAlreadyInCourse(alreadyInCourseSet);
     };
     initialStudents();
   }, []);
@@ -112,20 +113,20 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
   return (
     <div className="main-card">
       <div className="inner-card inner-card--stack">
-        <h2>Search users:</h2>
+        <h2>{t("searchUsers")}</h2>
 
         <div className="inner-card inner-card--row">
           <input
             type="text"
             value={search}
-            placeholder="Search..."
+            placeholder={t("search")}
             onChange={(e) => setSearch(e.target.value)}
           />
 
           <select value={grade} onChange={(e) => setGrade(e.target.value)}>
             {gradeOptions?.map((opt) => (
               <option key={opt} value={opt}>
-                {opt === "all" ? "All grade levels" : opt}
+                {opt === "all" ? t("allGradeLevels") : opt}
               </option>
             ))}
           </select>
@@ -153,7 +154,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
               setSubmit(true);
               const ok = await handleStudentUpdate();
               if (!ok) {
-                window.alert("Joku lisäys epäonnistui");
+                window.alert(t("addUserCourseFailed"));
                 return;
               } else {
                 setSubmit(false);
@@ -162,7 +163,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
               }
             }}
           >
-            Save
+            {t("save")}
           </button>
           <button
             className="btn"
@@ -170,7 +171,7 @@ const AddUserCourse = ({ setIsAddUserOpen, course, setRefresh }) => {
               setIsAddUserOpen(false);
             }}
           >
-            Return
+            {t("return")}
           </button>
         </div>
       </div>
