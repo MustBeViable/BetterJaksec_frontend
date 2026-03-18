@@ -117,5 +117,7 @@
   "noTeacherStudentFound": "Kein Lehrer/Student gefunden",
   "notStudentOrTeacher": "kein Student oder Lehrer",
   "addUserCourseFailed": "Ein Hinzufügen ist fehlgeschlagen",
-  "missingStateError": "Wie sind Sie ohne State hierher gelangt?"
+  "missingStateError": "Wie sind Sie ohne State hierher gelangt?",
+  "loginFailed": "Anmeldung fehlgeschlagen",
+  "wrongCredentials": "Ungültige E-Mail oder ungültiges Passwort"
 }

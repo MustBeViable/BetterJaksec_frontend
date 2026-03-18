@@ -117,5 +117,7 @@
   "noTeacherStudentFound": "Opettajaa/opiskelijaa ei löytynyt",
   "notStudentOrTeacher": "ei ole opiskelija tai opettaja",
   "addUserCourseFailed": "Käyttäjän lisääminen kurssille epäonnistui",
-  "missingStateError": "Miten päädyit tänne ilman statea?"
+  "missingStateError": "Miten päädyit tänne ilman statea?",
+  "loginFailed": "Kirjautuminen epäonnistui",
+  "wrongCredentials": "Virheellinen sähköposti tai salasana"
 }

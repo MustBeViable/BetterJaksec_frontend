@@ -117,5 +117,7 @@
   "noTeacherStudentFound": "未找到教师/学生",
   "notStudentOrTeacher": "不是学生或教师",
   "addUserCourseFailed": "添加失败",
-  "missingStateError": "你是怎么在没有 state 的情况下到这里的？"
+  "missingStateError": "你是怎么在没有 state 的情况下到这里的？",
+  "loginFailed": "登录失败",
+  "wrongCredentials": "邮箱或密码错误"
 }
