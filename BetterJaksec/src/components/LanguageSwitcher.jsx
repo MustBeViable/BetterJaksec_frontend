@@ -5,7 +5,9 @@ const languages = [
   { code: "en", label: "English" },
   { code: "fi", label: "Suomi" },
   { code: "de", label: "Deutsch" },
-  { code: "jp", label: "Japanese" },
+  { code: "jp", label: "日本語" },
+  { code: "ch", label: "中文" },
+  { code: "fa", label: "فارسی" },
 ];
 
 export default function LanguageSelector() {
