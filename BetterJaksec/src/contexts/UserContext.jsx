@@ -1,11 +1,13 @@
 import { createContext, useState, useEffect } from "react";
 import { useAuthentication, useUser } from "../hooks/AuthHooks";
 import { useNavigate } from "react-router-dom";
+import { getDirection } from "../i18n/i18nDirections";
 
 const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [lang, setLang] = useState("en");
   const { postLogin } = useAuthentication();
   const { getUserByToken } = useUser();
   const navigate = useNavigate();
@@ -21,7 +23,6 @@ const UserProvider = ({ children }) => {
       else navigate("/");
 
       return { success: true };
-
     } catch (error) {
       console.error("Login error:", error.message);
 
@@ -62,6 +63,19 @@ const UserProvider = ({ children }) => {
     }
   };
 
+  const handleLang = () => {
+    setLang(localStorage.getItem("lang"))
+  }
+ 
+  useEffect(() => {
+    const currentLanguage = localStorage.getItem("lang")
+      ? localStorage.getItem("lang")
+      : "en";
+    const dir = getDirection(lang);
+    document.documentElement.lang = currentLanguage;
+    document.documentElement.dir = dir;
+  }, [lang]);
+
   useEffect(() => {
     const tryAutoLogin = async () => {
       await handleAutoLogin();
@@ -71,7 +85,7 @@ const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, handleLogin, handleLogout, handleAutoLogin }}
+      value={{ user, handleLogin, handleLogout, handleAutoLogin, handleLang }}
     >
       {children}
     </UserContext.Provider>

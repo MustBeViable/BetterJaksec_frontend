@@ -5,6 +5,8 @@ import enCommon from "./locales/en/common.json";
 import fiCommon from "./locales/fi/common.json";
 import deCommon from "./locales/de/common.json";
 import jpCommon from "./locales/jp/common.json";
+import chCommon from "./locales/ch/common.json";
+import faCommon from "./locales/fa/common.json";
 
 i18n
   .use(initReactI18next)
@@ -12,8 +14,10 @@ i18n
     resources: {
       en: { common: enCommon },
       fi: { common: fiCommon },
-      de: { common: deCommon},
-      jp: { common: jpCommon},
+      de: { common: deCommon },
+      jp: { common: jpCommon },
+      ch: { common: chCommon },
+      fa: { common: faCommon },
     },
     lng: "en",
     fallbackLng: "en",

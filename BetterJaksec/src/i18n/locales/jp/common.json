@@ -117,5 +117,7 @@
   "noTeacherStudentFound": "教師/学生が見つかりません",
   "notStudentOrTeacher": "学生または教師ではありません",
   "addUserCourseFailed": "追加に失敗しました",
-  "missingStateError": "state なしでどうやってここに来たのですか？"
+  "missingStateError": "state なしでどうやってここに来たのですか？",
+  "loginFailed": "ログインに失敗しました",
+  "wrongCredentials": "メールアドレスまたはパスワードが正しくありません"
 }

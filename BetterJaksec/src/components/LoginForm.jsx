@@ -18,7 +18,8 @@ export default function LoginForm() {
     const result = await handleLogin({ email, password });
 
     if (!result.success) {
-      setError(result.message);
+      if (result.message === "Login failed") setError(t("loginFailed"));
+      if (result.message === "Invalid email or password") setError(t("wrongCredentials"));
     }
   };
 

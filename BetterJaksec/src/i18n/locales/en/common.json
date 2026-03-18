@@ -117,5 +117,7 @@
   "noTeacherStudentFound": "No teacher/student found",
   "notStudentOrTeacher": "not a student or teacher",
   "addUserCourseFailed": "Joku lisäys epäonnistui",
-  "missingStateError": "How did you get here without state?"
+  "missingStateError": "How did you get here without state?",
+  "loginFailed": "Login failed",
+  "wrongCredentials": "Invalid email or password"
 }
