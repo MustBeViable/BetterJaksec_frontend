@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { UserContext } from "../contexts/UserContext.jsx";
 
 const languages = [
   { code: "en", label: "English" },
@@ -11,12 +12,14 @@ const languages = [
 ];
 
 export default function LanguageSelector() {
+  const { handleLang } = useContext(UserContext);
   const { i18n } = useTranslation();
 
   const handleChange = (e) => {
     const selectedLang = e.target.value;
     i18n.changeLanguage(selectedLang);
     localStorage.setItem("lang", selectedLang);
+    handleLang();
   };
 
   return (
