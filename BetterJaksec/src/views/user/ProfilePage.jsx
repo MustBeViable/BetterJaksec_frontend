@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../hooks/AuthHooks";
+import LanguageSelector from "../../components/LanguageSwitcher";
 
 const ProfilePage = () => {
   const { t } = useTranslation("common");
@@ -29,23 +30,33 @@ const ProfilePage = () => {
     <div className="main-card inner-card--stack">
       <div className="inner-card inner-card--row">
         <h1>{t("profile")}</h1>
+
         {(user?.role === "student" || user?.role === "teacher") && (
-          <button
-            className="btn"
-            onClick={() => {
-              navigate("/");
-            }}
-          >
-            {t("return")}
-          </button>
+          <div style= {{display:"flex"}}>
+            <LanguageSelector></LanguageSelector>
+            <button
+              className="btn"
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              {t("return")}
+            </button>
+          </div>
         )}
       </div>
 
       <div className="inner-card inner-card--stack">
         <div className="inner-card inner-card--stack">
-          <p>{t("email")}: {user.email}</p>
-          <p>{t("name")}: {user.firstName}</p>
-          <p>{t("lastNameLabel")}: {user.lastName}</p>
+          <p>
+            {t("email")}: {user.email}
+          </p>
+          <p>
+            {t("name")}: {user.firstName}
+          </p>
+          <p>
+            {t("lastNameLabel")}: {user.lastName}
+          </p>
         </div>
 
         <button

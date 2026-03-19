@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import NewLesson from "../../components/user/NewLesson";
 import useLessonHook from "../../hooks/LessonHooks";
+import LanguageSelector from "../../components/LanguageSwitcher";
 
 const ManageLessons = () => {
   const { t } = useTranslation("common");
@@ -59,6 +60,7 @@ const ManageLessons = () => {
       <div className="inner-card inner-card--stack">
         <div className="inner-card inner-card--row">
           <h1>{t("manageLessons")}</h1>
+          <LanguageSelector></LanguageSelector>
           <button
             className="btn"
             type="button"

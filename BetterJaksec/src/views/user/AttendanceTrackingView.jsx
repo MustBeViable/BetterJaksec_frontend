@@ -6,6 +6,7 @@ import useStudentHook from "../../hooks/StudentHooks";
 import useCourseHook from "../../hooks/CourseHook";
 import useAttendanceHook from "../../hooks/AttendanceHook";
 import AttendanceCircle from "../../components/AttendanceCircle";
+import LanguageSelector from "../../components/LanguageSwitcher";
 
 const AttendanceTrackingView = () => {
   const { t } = useTranslation("common");
@@ -107,6 +108,7 @@ const AttendanceTrackingView = () => {
     <div className="main-card inner-card--stack">
       <div className="inner-card inner-card--row">
         <h1>{t("attendanceTracking")}</h1>
+        <LanguageSelector></LanguageSelector>
         <button className="btn" onClick={() => navigate("/")}>
           {t("return")}
         </button>

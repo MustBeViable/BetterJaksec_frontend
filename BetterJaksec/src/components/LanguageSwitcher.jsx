@@ -13,22 +13,30 @@ const languages = [
 
 export default function LanguageSelector() {
   const { handleLang } = useContext(UserContext);
-  const { i18n } = useTranslation();
+  const { i18n } = useTranslation("common");
 
-  const handleChange = (e) => {
-    const selectedLang = e.target.value;
+  const handleChange = (evt) => {
+    const selectedLang = evt.target.value;
     i18n.changeLanguage(selectedLang);
     localStorage.setItem("lang", selectedLang);
     handleLang();
   };
 
   return (
-    <select value={i18n.language} onChange={handleChange}>
-      {languages.map((lang) => (
-        <option key={lang.code} value={lang.code}>
-          {lang.label}
-        </option>
-      ))}
-    </select>
+    <div className="language-selector">
+      <select
+        id="languageSelector"
+        className="language-selector__select"
+        value={i18n.language}
+        onChange={handleChange}
+        aria-label="Select language"
+      >
+        {languages.map((lang) => (
+          <option key={lang.code} value={lang.code}>
+            {lang.label}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }

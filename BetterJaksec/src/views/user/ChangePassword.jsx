@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useUser } from "../../hooks/AuthHooks";
 import useStudentHook from "../../hooks/StudentHooks";
 import useTeacherHook from "../../hooks/TeacherHooks";
+import LanguageSelector from "../../components/LanguageSwitcher";
 
 const ChangePasswordPage = () => {
   const { t } = useTranslation("common");
@@ -80,6 +81,7 @@ const ChangePasswordPage = () => {
   return (
     <div className="main-card">
       <div className="inner-card inner-card--stack">
+        <LanguageSelector></LanguageSelector>
         <h2>{t("changePassword")}</h2>
 
         <input
