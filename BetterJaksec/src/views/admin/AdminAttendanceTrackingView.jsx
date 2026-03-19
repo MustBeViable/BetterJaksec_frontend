@@ -101,7 +101,7 @@ const AdminAttendanceTrackingView = () => {
     if (!loading && userRole) {
       fetchStudents();
     }
-  }, [selectedCourse, loading, userRole, getCourseStudents, getStudent]);
+  }, [selectedCourse, loading, userRole]);
 
   if (loading || !userRole) return <div>{t("loading")}</div>;
 
