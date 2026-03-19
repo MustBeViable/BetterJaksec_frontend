@@ -5,6 +5,7 @@ import UserManageButtonAdmin from "../../components/admin/UserManageButtonAdmin"
 import UserManageCard from "../../components/admin/UserManageCard";
 import useTeacherHook from "../../hooks/TeacherHooks";
 import useStudentHook from "../../hooks/StudentHooks";
+import LanguageSelector from "../../components/LanguageSwitcher";
 
 const ManageUsers = () => {
   const { t } = useTranslation("common");
@@ -50,6 +51,7 @@ const ManageUsers = () => {
 
   return (
     <div className="inner-card inner-card--stack">
+      <LanguageSelector></LanguageSelector>
       {selectedUser && (
         <UserManageCard
           user={selectedUser}

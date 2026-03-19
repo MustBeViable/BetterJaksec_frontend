@@ -6,6 +6,7 @@ import useStudentHooks from "../../hooks/StudentHooks";
 import useCourseHooks from "../../hooks/CourseHook";
 import useStudentCourse from "../../hooks/StudentCourseHook";
 import { UserContext } from "../../contexts/UserContext";
+import LanguageSelector from "../../components/LanguageSwitcher";
 
 const ManageCourses = () => {
   const { t } = useTranslation("common");
@@ -107,6 +108,7 @@ const ManageCourses = () => {
     <div className="main-card">
       <div className="inner-card inner-card--stack">
         <div className="inner-card inner-card--row">
+          <LanguageSelector></LanguageSelector>
           <button
             className="btn"
             onClick={() => {

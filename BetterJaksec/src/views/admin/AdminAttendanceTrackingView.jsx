@@ -7,6 +7,7 @@ import useCourseHook from "../../hooks/CourseHook";
 import useStudentCourseHook from "../../hooks/StudentCourseHook";
 import useStudentHook from "../../hooks/StudentHooks";
 import { useUser } from "../../hooks/AuthHooks";
+import LanguageSelector from "../../components/LanguageSwitcher";
 
 const AdminAttendanceTrackingView = () => {
   const { t } = useTranslation("common");
@@ -127,6 +128,7 @@ const AdminAttendanceTrackingView = () => {
           }}
         >
           <h3 style={{ margin: 0 }}>{t("courses")}</h3>
+          <LanguageSelector></LanguageSelector>
           {userRole === "teacher" && (
             <button className="btn" onClick={() => navigate("/")}>
               {t("return")}
