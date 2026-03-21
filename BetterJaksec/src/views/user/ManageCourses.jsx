@@ -148,7 +148,7 @@ const ManageCourses = () => {
             <button
               className="btn"
               onClick={() => {
-                navigate("/courses/lessons", { state: { course } });
+                navigate("/courses/manage/manage_lessons", { state: { course } });
               }}
             >
               {t("manageLessons")}

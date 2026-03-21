@@ -1,6 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import { formatPercent } from "../i18n/format";
 
 export default function AttendanceCircle({ attended, total, size = 250 }) {
+  const { i18n } = useTranslation("common");
   const percentage = total > 0 ? Math.round((attended / total) * 100) : 0;
 
   return (
@@ -32,7 +35,7 @@ export default function AttendanceCircle({ attended, total, size = 250 }) {
           background: "transparent",
         }}
       >
-        {percentage}%
+        {formatPercent(percentage, i18n.language)}
       </div>
     </div>
   );
