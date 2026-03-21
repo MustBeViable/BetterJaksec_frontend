@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { formatInteger } from "../../i18n/format";
 import useStudentHook from "../../hooks/StudentHooks";
 import useTeacherHook from "../../hooks/TeacherHooks";
 
 const UserManageCard = ({ user, setSelectedUser, setChange }) => {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const [role, setRole] = useState(user.isAdmin ? "admin" : "teacher");
   const { deleteStudent } = useStudentHook();
   const { putTeacher, deleteTeacher } = useTeacherHook();
@@ -48,7 +49,11 @@ const UserManageCard = ({ user, setSelectedUser, setChange }) => {
           <tbody>
             <tr>
               <td>{t("id")}</td>
-              <td>{user.studentID ?? user.teacherID}</td>
+              <td>
+                {user.studentID ?? user.teacherID
+                  ? formatInteger(Number(user.studentID ?? user.teacherID), i18n.language)
+                  : ""}
+              </td>
             </tr>
             <tr>
               <td>{t("name")}</td>

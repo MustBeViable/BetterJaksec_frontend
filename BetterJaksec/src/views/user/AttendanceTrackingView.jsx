@@ -7,9 +7,10 @@ import useCourseHook from "../../hooks/CourseHook";
 import useAttendanceHook from "../../hooks/AttendanceHook";
 import AttendanceCircle from "../../components/AttendanceCircle";
 import LanguageSelector from "../../components/LanguageSwitcher";
+import { formatDate } from "../../i18n/format";
 
 const AttendanceTrackingView = () => {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const navigate = useNavigate();
 
   const { getUserByToken } = useUser();
@@ -172,7 +173,7 @@ const AttendanceTrackingView = () => {
                 }}
               >
                 <div>
-                  {new Date(record.lessonDate).toLocaleDateString()} — {record.present ? t("present") : t("absent")}
+                  {formatDate(record.lessonDate, i18n.language)} — {record.present ? t("present") : t("absent")}
                 </div>
 
                 {!record.present && (
