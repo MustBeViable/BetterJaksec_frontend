@@ -102,7 +102,7 @@ const ManageCourses = () => {
     };
 
     initialStudents();
-  }, [course, isAddUsersOpen, removeModal, refresh, getCourseStudents, getStudent]);
+  }, [course, isAddUsersOpen, removeModal, refresh]);
 
   return (
     <div className="main-card">
