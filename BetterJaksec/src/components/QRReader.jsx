@@ -44,7 +44,7 @@ export default function QRScanner() {
     return () => {
       scanner.clear().catch(() => {});
     };
-  }, [user, postAttendance, scanned, t]);
+  }, [user, scanned, t]);
 
   if (scanned) {
     return (
