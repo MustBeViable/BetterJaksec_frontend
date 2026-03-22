@@ -106,6 +106,7 @@ const ManageCourses = () => {
 
   return (
     <div className="main-card">
+    {!isAddUsersOpen && (
       <div className="inner-card inner-card--stack">
         <div className="inner-card inner-card--row">
           <LanguageSelector></LanguageSelector>
@@ -223,6 +224,7 @@ const ManageCourses = () => {
           </div>
         </div>
       </div>
+      )}
 
       {removeModal && (
         <div className="main-card">
