@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useLessonHook from "../../hooks/LessonHooks";
+import DatePickerLocalized from "../DatePickerLocalized";
 
 const NewLesson = ({
   course,
@@ -115,11 +116,10 @@ const NewLesson = ({
 
       <label>
         <p>{t("lessonDate")}</p>
-        <input
-          type="date"
+        <DatePickerLocalized
           value={lessonDate}
-          onChange={(e) => {
-            setLessonDate(e.target.value);
+          onChange={(newDate) => {
+            setLessonDate(newDate);
             if (dateError) setDateError("");
           }}
         />
