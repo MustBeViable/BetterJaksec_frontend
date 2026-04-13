@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useLessonHook from "../../hooks/LessonHooks";
 import LocalizedDatePicker from "../LocalizedDatePicker";
+
 const NewLesson = ({
   course,
   setCourse,
@@ -13,7 +14,7 @@ const NewLesson = ({
   onCreated,
   onDeleted,
 }) => {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common"); 
   const [lessonName, setLessonName] = useState("");
   const [lessonDate, setLessonDate] = useState("");
 
@@ -22,6 +23,15 @@ const NewLesson = ({
 
   const navigate = useNavigate();
   const { postLesson, putLesson, deleteLesson } = useLessonHook();
+
+  const localeMap = {
+    en: "en_US",
+    fi: "fi_FI",
+    de: "de_DE",
+    ja: "ja_JP",
+    zh: "zh_CN",
+    fa: "fa_IR",
+  };
 
   useEffect(() => {
     const initComponent = () => {
@@ -80,6 +90,7 @@ const NewLesson = ({
 
     const lessonObject = {
       lessonName: lessonName,
+      locale: localeMap[i18n.language] ?? "en_US",
       lessonDate: lessonDate,
       courseID: course.id,
     };

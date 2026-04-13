@@ -12,6 +12,7 @@ const useCourseHook = () => {
   const postCourse = async (course) => {
     const body = {
       courseName: course.courseName,
+      locale: course.locale ?? "en_US",
       lessonIds: course.lessonIds ?? [],
       assignmentIds: course.assignmentIds ?? [],
       teacherIds: course.teacherIds,
