@@ -24,6 +24,7 @@ const useLessonHook = () => {
   const postLesson = async (lesson) => {
     const body = {
       lessonName: lesson.lessonName,
+      locale: lesson.locale ?? "en_US",
       date: normalizeDateToIso(lesson.lessonDate),
       courseId: lesson.courseID,
     };

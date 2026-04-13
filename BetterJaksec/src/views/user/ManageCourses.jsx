@@ -9,7 +9,7 @@ import { UserContext } from "../../contexts/UserContext";
 import LanguageSelector from "../../components/LanguageSwitcher";
 
 const ManageCourses = () => {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const { state } = useLocation();
@@ -29,9 +29,19 @@ const ManageCourses = () => {
   const { getStudent } = useStudentHooks();
   const { postCourse, putCourse, deleteCourse } = useCourseHooks();
 
+  const localeMap = {
+    en: "en_US",
+    fi: "fi_FI",
+    de: "de_DE",
+    ja: "ja_JP",
+    zh: "zh_CN",
+    fa: "fa_IR",
+  };
+
   const createCourse = async () => {
     const newCourse = {
       courseName: courseName,
+      locale: localeMap[i18n.language] ?? "en_US",
       lessonIds: [],
       assignmentIds: [],
       teacherId: user?.id,
