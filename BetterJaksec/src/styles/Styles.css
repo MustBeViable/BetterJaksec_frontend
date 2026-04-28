@@ -135,37 +135,63 @@ a:hover {
 }
 
 .inner-card input,
-.inner-card textarea {
+.inner-card textarea,
+.inner-card select {
   width: 100%;
-  background: rgba(255, 255, 255, 0.04);
+  background-color: rgba(255, 255, 255, 0.04);
   color: var(--text);
   border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 10px 14px;
   outline: none;
   transition: transform 0.05s ease, border-color 0.15s ease,
-    background 0.15s ease;
+    background-color 0.15s ease, box-shadow 0.15s ease;
   font-family: inherit;
   font-size: var(--font-p);
   line-height: inherit;
 }
 
 .inner-card input:hover,
-.inner-card textarea:hover {
+.inner-card textarea:hover,
+.inner-card select:hover {
   border-color: rgba(108, 125, 255, 0.55);
-  background: rgba(108, 125, 255, 0.08);
+  background-color: rgba(108, 125, 255, 0.08);
 }
 
 .inner-card input:focus,
-.inner-card textarea:focus {
+.inner-card textarea:focus,
+.inner-card select:focus {
   border-color: var(--primary);
-  background: rgba(108, 125, 255, 0.08);
+  background-color: rgba(108, 125, 255, 0.08);
   box-shadow: 0 0 0 2px rgba(108, 125, 255, 0.35);
 }
 
 .inner-card input:active,
-.inner-card textarea:active {
+.inner-card textarea:active,
+.inner-card select:active {
   transform: translateY(1px);
+}
+
+.inner-card select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  padding-right: 42px;
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text) 50%),
+    linear-gradient(135deg, var(--text) 50%, transparent 50%);
+  background-position:
+    calc(100% - 22px) calc(50% - 3px),
+    calc(100% - 16px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.inner-card select option {
+  background: var(--surface-2);
+  color: var(--text);
 }
 
 .btn,
